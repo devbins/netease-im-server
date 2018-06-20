@@ -26,7 +26,8 @@ const (
 var client = http.Client{}
 
 type BaseResp struct {
-	Code int `json:"code"`
+	Code int    `json:"code"`
+	Desc string `json:"desc"`
 }
 
 type Info struct {
@@ -121,6 +122,56 @@ func RefreshToken(accid string) (*TokenRespose, error) {
 	}
 
 	return token, nil
+
+}
+
+// Block ...
+func Block(accid string) (*BaseResp, error) {
+	req, err := http.NewRequest("POST", ACTION_BLOCK, strings.NewReader("accid="+accid))
+	if err != nil {
+		return nil, err
+	}
+	fillHeader(req)
+	res, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer res.Body.Close()
+	resBody, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+	data := &BaseResp{}
+	err = json.Unmarshal(resBody, data)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
+// UnBlock ...
+func UnBlock(accid string) (*BaseResp, error) {
+	req, err := http.NewRequest("POST", ACTION_UNBLOCK, strings.NewReader("accid="+accid))
+	if err != nil {
+		return nil, err
+	}
+	fillHeader(req)
+	res, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	defer res.Body.Close()
+	resBody, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+	data := &BaseResp{}
+	err = json.Unmarshal(resBody, data)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
 
 }
 
