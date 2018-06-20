@@ -35,44 +35,70 @@ type Info struct {
 	Name  string `json:"name"`
 }
 
-type TokenRes struct {
+type TokenRespose struct {
 	BaseResp
 	Info `json:"info"`
 }
 
-// create ...
-func create(accid, name string) {
-	req, err := http.NewRequest("POST", ACTION_CREATE, strings.NewReader("accid="+accid+"&name="+name))
+// Create ...
+func Create(accid string) (*TokenRespose, error) {
+	req, err := http.NewRequest("POST", ACTION_CREATE, strings.NewReader("accid="+accid))
 	if err != nil {
-		fmt.Println(err)
+		return nil, err
 	}
 	fillHeader(req)
 	res, err := client.Do(req)
 	if err != nil {
-		fmt.Println(err)
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	resBody, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+	token := &TokenRespose{}
+	err = json.Unmarshal(resBody, token)
+	if err != nil {
+		return nil, err
+	}
+	return token, nil
+
+}
+
+// Update ...
+func Update(accid string) (*BaseResp, error) {
+	req, err := http.NewRequest("POST", ACTION_UPDATE, strings.NewReader("accid="+accid))
+	if err != nil {
+		return nil, err
+	}
+
+	fillHeader(req)
+
+	res, err := client.Do(req)
+	if err != nil {
+		return nil, err
 	}
 	defer res.Body.Close()
 	resBody, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		fmt.Println(err)
+		return nil, err
 	}
-	fmt.Println(resBody)
 
-}
+	resCode := &BaseResp{}
 
-// fillHeader ...
-func fillHeader(req *http.Request) {
-	curTime := strconv.Itoa(int(time.Now().Unix()))
-	req.Header.Add("AppKey", APPKEY)
-	req.Header.Add("Nonce", NONCE)
-	req.Header.Add("CurTime", curTime)
-	req.Header.Add("CheckSum", getCheckSUm(APPSECRET, NONCE, curTime))
-	req.Header.Add("Cotent-Type", "application/x-www-form-urlencoded")
+	err = json.Unmarshal(resBody, resCode)
+	if err != nil {
+		return nil, err
+	}
+	return resCode, nil
+
 }
 
 // RefreshToken ...
-func RefreshToken(accid string) (*TokenRes, error) {
-	req, err := http.NewRequest("POST", ACTION_REFRESH_TOKEN, strings.NewReader("accid="+accid))
+func RefreshToken(accid string) (*TokenRespose, error) {
+	reqBody := url.Values{"accid": {accid}}
+	req, err := http.NewRequest("POST", ACTION_REFRESH_TOKEN, strings.NewReader(reqBody.Encode()))
 	if err != nil {
 		return nil, err
 	}
@@ -88,7 +114,7 @@ func RefreshToken(accid string) (*TokenRes, error) {
 	if err != nil {
 		return nil, err
 	}
-	token := &TokenRes{}
+	token := &TokenRespose{}
 	err = json.Unmarshal(resBody, token)
 	if err != nil {
 		return nil, err
@@ -103,6 +129,16 @@ func getCheckSUm(appSecret, nonce, curTime string) string {
 	sum := appSecret + nonce + curTime
 	h := sha1.New()
 	h.Write([]byte(sum))
-	resutlt := h.Sum(nil)
-	return string(resutlt)
+	result := h.Sum(nil)
+	return fmt.Sprintf("%x", result)
+}
+
+// fillHeader ...
+func fillHeader(req *http.Request) {
+	curTime := strconv.Itoa(int(time.Now().Unix()))
+	req.Header.Add("AppKey", APPKEY)
+	req.Header.Add("Nonce", NONCE)
+	req.Header.Add("CurTime", curTime)
+	req.Header.Add("CheckSum", getCheckSUm(APPSECRET, NONCE, curTime))
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 }
