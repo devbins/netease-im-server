@@ -175,6 +175,22 @@ func UnBlock(accid string) (*BaseResp, error) {
 
 }
 
+// SetDonnop ...
+func SetDonnop(accid string, donnopOpen bool) (*BaseResp, error) {
+	params := url.Values{"accid": {accid}, "donnopOpen": {strconv.FormatBool(donnopOpen)}}
+	data, err := ResponseResult(ACTION_DONNOP_OPEN, params)
+	if err != nil {
+		return nil, err
+	}
+	result := &BaseResp{}
+	err = json.Unmarshal(data, result)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+
+}
+
 // ResponseResult ...
 func ResponseResult(action string, params url.Values) ([]byte, error) {
 	req, err := http.NewRequest("POST", action, strings.NewReader(params.Encode()))
