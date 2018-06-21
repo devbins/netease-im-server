@@ -24,6 +24,7 @@ const (
 	ACTION_UNBLOCK       = BASE_URL + "user/unblock.action"      // 解禁网易云通信ID
 	ACTION_DONNOP_OPEN   = BASE_URL + "user/setDonnop.action"    // 设置桌面端在线时，移动端是否需要推送
 	ACTION_UPDATE_UINFO  = BASE_URL + "user/updateUinfo.action"  // 更新用户名片
+	ACTION_GET_UINFO     = BASE_URL + "user/getUinfos.action"    // 获取用户名片
 )
 
 var client = http.Client{}
@@ -34,14 +35,22 @@ type BaseResp struct {
 }
 
 type Info struct {
-	Token string `json:"token"`
-	Accid string `json:"accid"`
-	Name  string `json:"name"`
+	Token  string `json:"token"`
+	Accid  string `json:"accid"`
+	Name   string `json:"name"`
+	Email  string `json:"email"`
+	Gender int    `json:"gender"`
+	Mobile string `json:"mobile"`
 }
 
 type TokenRespose struct {
 	BaseResp
 	Info `json:"info"`
+}
+
+type Uinfos struct {
+	BaseResp
+	Uinfos []Info `json:"uinfos"`
 }
 
 // Create ...
@@ -190,6 +199,21 @@ func UpdateUinfo(params url.Values) (*BaseResp, error) {
 		return nil, err
 	}
 	return result, nil
+
+}
+
+// GetUinfo ...
+func GetUinfo(accids ...string) (*Uinfos, error) {
+	data, err := ResponseResult(ACTION_GET_UINFO, url.Values{"accids": accids})
+	if err != nil {
+		return nil, err
+	}
+	infos := &Uinfos{}
+	err = json.Unmarshal(data, infos)
+	if err != nil {
+		return nil, err
+	}
+	return infos, nil
 
 }
 
