@@ -13,18 +13,25 @@ import (
 )
 
 const (
-	APPKEY               = ""
-	APPSECRET            = ""
-	NONCE                = ""
-	BASE_URL             = "https://api.netease.im/nimserver/"
-	ACTION_CREATE        = BASE_URL + "user/create.action"       // 创建云通信ID
-	ACTION_UPDATE        = BASE_URL + "user/update.action"       // 更新云通信ID
-	ACTION_REFRESH_TOKEN = BASE_URL + "user/refreshToken.action" // 更新并获取token
-	ACTION_BLOCK         = BASE_URL + "user/block.action"        // 封禁网易云通信ID
-	ACTION_UNBLOCK       = BASE_URL + "user/unblock.action"      // 解禁网易云通信ID
-	ACTION_DONNOP_OPEN   = BASE_URL + "user/setDonnop.action"    // 设置桌面端在线时，移动端是否需要推送
-	ACTION_UPDATE_UINFO  = BASE_URL + "user/updateUinfo.action"  // 更新用户名片
-	ACTION_GET_UINFO     = BASE_URL + "user/getUinfos.action"    // 获取用户名片
+	APPKEY                               = ""
+	APPSECRET                            = ""
+	NONCE                                = ""
+	BASE_URL                             = "https://api.netease.im/nimserver/"
+	ACTION_USER_CREATE                   = BASE_URL + "user/create.action"               // 创建云通信ID
+	ACTION_USER_UPDATE                   = BASE_URL + "user/update.action"               // 更新云通信ID
+	ACTION_USER_REFRESH_TOKEN            = BASE_URL + "user/refreshToken.action"         // 更新并获取token
+	ACTION_USER_BLOCK                    = BASE_URL + "user/block.action"                // 封禁网易云通信ID
+	ACTION_USER_UNBLOCK                  = BASE_URL + "user/unblock.action"              // 解禁网易云通信ID
+	ACTION_USER_DONNOP_OPEN              = BASE_URL + "user/setDonnop.action"            // 设置桌面端在线时，移动端是否需要推送
+	ACTION_USER_UPDATE_UINFO             = BASE_URL + "user/updateUinfo.action"          // 更新用户名片
+	ACTION_USER_GET_UINFO                = BASE_URL + "user/getUinfos.action"            // 获取用户名片
+	ACTION_USER_SET_SPECIAL_RELATION     = BASE_URL + "user/setSpecialRelation.action"   // 设置黑名单/静音
+	ACTION_USER_LIST_BLACK_AND_MUTE_LIST = BASE_URL + "user/listBlackAndMuteList.action" // 查看指定用户的黑名单和静音列表
+
+	ACTION_FRIEND_ADD    = BASE_URL + "friend/add.action"    // 加好友
+	ACTION_FRIEND_UPDATE = BASE_URL + "friend/update.action" // 更新好友相关信息
+	ACTION_FRIEND_DELETE = BASE_URL + "friend/delete.action" // 删除好友
+	ACTION_FRIEND_GET    = BASE_URL + "friend/get.action"    // 获取好友关系
 )
 
 var client = http.Client{}
@@ -55,7 +62,7 @@ type Uinfos struct {
 
 // Create ...
 func Create(accid string) (*TokenRespose, error) {
-	req, err := http.NewRequest("POST", ACTION_CREATE, strings.NewReader("accid="+accid))
+	req, err := http.NewRequest("POST", ACTION_USER_CREATE, strings.NewReader("accid="+accid))
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +88,7 @@ func Create(accid string) (*TokenRespose, error) {
 
 // Update ...
 func Update(accid string) (*BaseResp, error) {
-	req, err := http.NewRequest("POST", ACTION_UPDATE, strings.NewReader("accid="+accid))
+	req, err := http.NewRequest("POST", ACTION_USER_UPDATE, strings.NewReader("accid="+accid))
 	if err != nil {
 		return nil, err
 	}
@@ -111,7 +118,7 @@ func Update(accid string) (*BaseResp, error) {
 // RefreshToken ...
 func RefreshToken(accid string) (*TokenRespose, error) {
 	reqBody := url.Values{"accid": {accid}}
-	req, err := http.NewRequest("POST", ACTION_REFRESH_TOKEN, strings.NewReader(reqBody.Encode()))
+	req, err := http.NewRequest("POST", ACTION_USER_REFRESH_TOKEN, strings.NewReader(reqBody.Encode()))
 	if err != nil {
 		return nil, err
 	}
@@ -139,7 +146,7 @@ func RefreshToken(accid string) (*TokenRespose, error) {
 
 // Block ...
 func Block(accid string) (*BaseResp, error) {
-	req, err := http.NewRequest("POST", ACTION_BLOCK, strings.NewReader("accid="+accid))
+	req, err := http.NewRequest("POST", ACTION_USER_BLOCK, strings.NewReader("accid="+accid))
 	if err != nil {
 		return nil, err
 	}
@@ -163,7 +170,7 @@ func Block(accid string) (*BaseResp, error) {
 
 // UnBlock ...
 func UnBlock(accid string) (*BaseResp, error) {
-	req, err := http.NewRequest("POST", ACTION_UNBLOCK, strings.NewReader("accid="+accid))
+	req, err := http.NewRequest("POST", ACTION_USER_UNBLOCK, strings.NewReader("accid="+accid))
 	if err != nil {
 		return nil, err
 	}
@@ -189,7 +196,7 @@ func UnBlock(accid string) (*BaseResp, error) {
 
 // UpdateUinfo ...
 func UpdateUinfo(params url.Values) (*BaseResp, error) {
-	data, err := ResponseResult(ACTION_UPDATE_UINFO, params)
+	data, err := ResponseResult(ACTION_USER_UPDATE_UINFO, params)
 	if err != nil {
 		return nil, err
 	}
@@ -204,7 +211,7 @@ func UpdateUinfo(params url.Values) (*BaseResp, error) {
 
 // GetUinfo ...
 func GetUinfo(accids ...string) (*Uinfos, error) {
-	data, err := ResponseResult(ACTION_GET_UINFO, url.Values{"accids": accids})
+	data, err := ResponseResult(ACTION_USER_GET_UINFO, url.Values{"accids": accids})
 	if err != nil {
 		return nil, err
 	}
@@ -220,7 +227,7 @@ func GetUinfo(accids ...string) (*Uinfos, error) {
 // SetDonnop ...
 func SetDonnop(accid string, donnopOpen bool) (*BaseResp, error) {
 	params := url.Values{"accid": {accid}, "donnopOpen": {strconv.FormatBool(donnopOpen)}}
-	data, err := ResponseResult(ACTION_DONNOP_OPEN, params)
+	data, err := ResponseResult(ACTION_USER_DONNOP_OPEN, params)
 	if err != nil {
 		return nil, err
 	}
