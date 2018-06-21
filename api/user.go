@@ -175,6 +175,27 @@ func UnBlock(accid string) (*BaseResp, error) {
 
 }
 
+// ResponseResult ...
+func ResponseResult(action string, params url.Values) ([]byte, error) {
+	req, err := http.NewRequest("POST", action, strings.NewReader(params.Encode()))
+	if err != nil {
+		return nil, err
+	}
+	fillHeader(req)
+	res, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	defer res.Body.Close()
+	resBody, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+	return resBody, nil
+
+}
+
 // getCheckSUm ...
 func getCheckSUm(appSecret, nonce, curTime string) string {
 	sum := appSecret + nonce + curTime
