@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -21,6 +22,7 @@ const (
 	ACTION_REFRESH_TOKEN = BASE_URL + "user/refreshToken.action" // 更新并获取token
 	ACTION_BLOCK         = BASE_URL + "user/block.action"        // 封禁网易云通信ID
 	ACTION_UNBLOCK       = BASE_URL + "user/unblock.action"      // 解禁网易云通信ID
+	ACTION_DONNOP_OPEN   = BASE_URL + "user/setDonnop.action"    // 设置桌面端在线时，移动端是否需要推送
 )
 
 var client = http.Client{}
