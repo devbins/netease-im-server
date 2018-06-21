@@ -23,6 +23,7 @@ const (
 	ACTION_BLOCK         = BASE_URL + "user/block.action"        // 封禁网易云通信ID
 	ACTION_UNBLOCK       = BASE_URL + "user/unblock.action"      // 解禁网易云通信ID
 	ACTION_DONNOP_OPEN   = BASE_URL + "user/setDonnop.action"    // 设置桌面端在线时，移动端是否需要推送
+	ACTION_UPDATE_UINFO  = BASE_URL + "user/updateUinfo.action"  // 更新用户名片
 )
 
 var client = http.Client{}
@@ -174,6 +175,21 @@ func UnBlock(accid string) (*BaseResp, error) {
 		return nil, err
 	}
 	return data, nil
+
+}
+
+// UpdateUinfo ...
+func UpdateUinfo(params url.Values) (*BaseResp, error) {
+	data, err := ResponseResult(ACTION_UPDATE_UINFO, params)
+	if err != nil {
+		return nil, err
+	}
+	result := &BaseResp{}
+	err = json.Unmarshal(data, result)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
 
 }
 
