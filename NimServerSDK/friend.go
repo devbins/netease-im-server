@@ -6,6 +6,12 @@ import (
 	"strconv"
 )
 
+type Friend struct {
+	APPKEY    string
+	APPSECRET string
+	NONCE     string
+}
+
 type FriendInfo struct {
 	CreateTime  int64  `json:"createtime"`
 	Bidirection bool   `json:"bidirection"`
@@ -26,8 +32,8 @@ type BlackAndMuteList struct {
 }
 
 // AddFriend ...
-func AddFriend(accid string, faccid string, ftype int, msg string) (*BaseResp, error) {
-	data, err := ResponseResult(ACTION_FRIEND_ADD, url.Values{"accid": {accid}, "faccid": {faccid}, "type": {strconv.Itoa(ftype)}, "msg": {msg}})
+func (this *Friend) AddFriend(accid string, faccid string, ftype int, msg string) (*BaseResp, error) {
+	data, err := ResponseResult(this.APPKEY, this.APPSECRET, this.NONCE, ACTION_FRIEND_ADD, url.Values{"accid": {accid}, "faccid": {faccid}, "type": {strconv.Itoa(ftype)}, "msg": {msg}})
 	if err != nil {
 		return nil, err
 	}
@@ -40,8 +46,8 @@ func AddFriend(accid string, faccid string, ftype int, msg string) (*BaseResp, e
 }
 
 // UpdateFriend ...
-func UpdateFriend(accid, faccid, alias, ex string) (*BaseResp, error) {
-	data, err := ResponseResult(ACTION_FRIEND_UPDATE, url.Values{"accid": {accid}, "faccid": {faccid}, "alias": {alias}, "ex": {ex}})
+func (this *Friend) UpdateFriend(accid, faccid, alias, ex string) (*BaseResp, error) {
+	data, err := ResponseResult(this.APPKEY, this.APPSECRET, this.NONCE, ACTION_FRIEND_UPDATE, url.Values{"accid": {accid}, "faccid": {faccid}, "alias": {alias}, "ex": {ex}})
 	if err != nil {
 		return nil, err
 	}
@@ -55,8 +61,8 @@ func UpdateFriend(accid, faccid, alias, ex string) (*BaseResp, error) {
 }
 
 // DeleeteFriend ...
-func DeleeteFriend(accid, faccid string) (*BaseResp, error) {
-	data, err := ResponseResult(ACTION_FRIEND_DELETE, url.Values{"accid": {accid}, "faccid": {faccid}})
+func (this *Friend) DeleeteFriend(accid, faccid string) (*BaseResp, error) {
+	data, err := ResponseResult(this.APPKEY, this.APPSECRET, this.NONCE, ACTION_FRIEND_DELETE, url.Values{"accid": {accid}, "faccid": {faccid}})
 	if err != nil {
 		return nil, err
 	}
@@ -70,8 +76,8 @@ func DeleeteFriend(accid, faccid string) (*BaseResp, error) {
 }
 
 // GetFriendList ...
-func GetFriendList(accid string, updateTime int64) (*FriendInfoResponse, error) {
-	data, err := ResponseResult(ACTION_FRIEND_GET, url.Values{"accid": {accid}, "updatetime": {strconv.FormatInt(updateTime, 10)}})
+func (this *Friend) GetFriendList(accid string, updateTime int64) (*FriendInfoResponse, error) {
+	data, err := ResponseResult(this.APPKEY, this.APPSECRET, this.NONCE, ACTION_FRIEND_GET, url.Values{"accid": {accid}, "updatetime": {strconv.FormatInt(updateTime, 10)}})
 	if err != nil {
 		return nil, err
 	}
@@ -85,8 +91,8 @@ func GetFriendList(accid string, updateTime int64) (*FriendInfoResponse, error) 
 }
 
 // SetSpecialRelation ...
-func SetSpecialRelation(accid string, targetAcc string, relationType int, value int) (*BaseResp, error) {
-	data, err := ResponseResult(ACTION_USER_SET_SPECIAL_RELATION, url.Values{"accid": {accid}, "targetAcc": {targetAcc}, "relationType": {strconv.Itoa(relationType)}, "value": {strconv.Itoa(value)}})
+func (this *Friend) SetSpecialRelation(accid string, targetAcc string, relationType int, value int) (*BaseResp, error) {
+	data, err := ResponseResult(this.APPKEY, this.APPSECRET, this.NONCE, ACTION_USER_SET_SPECIAL_RELATION, url.Values{"accid": {accid}, "targetAcc": {targetAcc}, "relationType": {strconv.Itoa(relationType)}, "value": {strconv.Itoa(value)}})
 	if err != nil {
 		return nil, err
 	}
@@ -100,8 +106,8 @@ func SetSpecialRelation(accid string, targetAcc string, relationType int, value 
 }
 
 // ListBlackAndMuteList ...
-func ListBlackAndMuteList(accid string) (*BlackAndMuteList, error) {
-	data, err := ResponseResult(ACTION_USER_LIST_BLACK_AND_MUTE_LIST, url.Values{"accid": {accid}})
+func (this *Friend) ListBlackAndMuteList(accid string) (*BlackAndMuteList, error) {
+	data, err := ResponseResult(this.APPKEY, this.APPSECRET, this.NONCE, ACTION_USER_LIST_BLACK_AND_MUTE_LIST, url.Values{"accid": {accid}})
 	if err != nil {
 		return nil, err
 	}

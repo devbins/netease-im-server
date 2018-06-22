@@ -13,9 +13,6 @@ import (
 )
 
 const (
-	APPKEY                               = ""
-	APPSECRET                            = ""
-	NONCE                                = ""
 	BASE_URL                             = "https://api.netease.im/nimserver/"
 	ACTION_USER_CREATE                   = BASE_URL + "user/create.action"               // 创建云通信ID
 	ACTION_USER_UPDATE                   = BASE_URL + "user/update.action"               // 更新云通信ID
@@ -33,6 +30,12 @@ const (
 	ACTION_FRIEND_DELETE = BASE_URL + "friend/delete.action" // 删除好友
 	ACTION_FRIEND_GET    = BASE_URL + "friend/get.action"    // 获取好友关系
 )
+
+type User struct {
+	APPKEY    string
+	APPSECRET string
+	NONCE     string
+}
 
 var client = http.Client{}
 
@@ -61,12 +64,12 @@ type Uinfos struct {
 }
 
 // Create ...
-func Create(accid string) (*TokenRespose, error) {
+func (this *User) Create(accid string) (*TokenRespose, error) {
 	req, err := http.NewRequest("POST", ACTION_USER_CREATE, strings.NewReader("accid="+accid))
 	if err != nil {
 		return nil, err
 	}
-	fillHeader(req)
+	fillHeader(req, this.APPKEY, this.APPSECRET, this.NONCE)
 	res, err := client.Do(req)
 	if err != nil {
 		return nil, err
@@ -87,13 +90,13 @@ func Create(accid string) (*TokenRespose, error) {
 }
 
 // Update ...
-func Update(accid string) (*BaseResp, error) {
+func (this *User) Update(accid string) (*BaseResp, error) {
 	req, err := http.NewRequest("POST", ACTION_USER_UPDATE, strings.NewReader("accid="+accid))
 	if err != nil {
 		return nil, err
 	}
 
-	fillHeader(req)
+	fillHeader(req, this.APPKEY, this.APPSECRET, this.NONCE)
 
 	res, err := client.Do(req)
 	if err != nil {
@@ -116,14 +119,14 @@ func Update(accid string) (*BaseResp, error) {
 }
 
 // RefreshToken ...
-func RefreshToken(accid string) (*TokenRespose, error) {
+func (this *User) RefreshToken(accid string) (*TokenRespose, error) {
 	reqBody := url.Values{"accid": {accid}}
 	req, err := http.NewRequest("POST", ACTION_USER_REFRESH_TOKEN, strings.NewReader(reqBody.Encode()))
 	if err != nil {
 		return nil, err
 	}
 
-	fillHeader(req)
+	fillHeader(req, this.APPKEY, this.APPSECRET, this.NONCE)
 
 	res, err := client.Do(req)
 	if err != nil {
@@ -145,12 +148,12 @@ func RefreshToken(accid string) (*TokenRespose, error) {
 }
 
 // Block ...
-func Block(accid string) (*BaseResp, error) {
+func (this *User) Block(accid string) (*BaseResp, error) {
 	req, err := http.NewRequest("POST", ACTION_USER_BLOCK, strings.NewReader("accid="+accid))
 	if err != nil {
 		return nil, err
 	}
-	fillHeader(req)
+	fillHeader(req, this.APPKEY, this.APPSECRET, this.NONCE)
 	res, err := client.Do(req)
 	if err != nil {
 		return nil, err
@@ -169,12 +172,12 @@ func Block(accid string) (*BaseResp, error) {
 }
 
 // UnBlock ...
-func UnBlock(accid string) (*BaseResp, error) {
+func (this *User) UnBlock(accid string) (*BaseResp, error) {
 	req, err := http.NewRequest("POST", ACTION_USER_UNBLOCK, strings.NewReader("accid="+accid))
 	if err != nil {
 		return nil, err
 	}
-	fillHeader(req)
+	fillHeader(req, this.APPKEY, this.APPSECRET, this.NONCE)
 	res, err := client.Do(req)
 	if err != nil {
 		return nil, err
@@ -195,8 +198,8 @@ func UnBlock(accid string) (*BaseResp, error) {
 }
 
 // UpdateUinfo ...
-func UpdateUinfo(params url.Values) (*BaseResp, error) {
-	data, err := ResponseResult(ACTION_USER_UPDATE_UINFO, params)
+func (this *User) UpdateUinfo(params url.Values) (*BaseResp, error) {
+	data, err := ResponseResult(this.APPKEY, this.APPSECRET, this.NONCE, ACTION_USER_UPDATE_UINFO, params)
 	if err != nil {
 		return nil, err
 	}
@@ -210,8 +213,8 @@ func UpdateUinfo(params url.Values) (*BaseResp, error) {
 }
 
 // GetUinfo ...
-func GetUinfo(accids ...string) (*Uinfos, error) {
-	data, err := ResponseResult(ACTION_USER_GET_UINFO, url.Values{"accids": accids})
+func (this *User) GetUinfo(accids ...string) (*Uinfos, error) {
+	data, err := ResponseResult(this.APPKEY, this.APPSECRET, this.NONCE, ACTION_USER_GET_UINFO, url.Values{"accids": accids})
 	if err != nil {
 		return nil, err
 	}
@@ -225,9 +228,9 @@ func GetUinfo(accids ...string) (*Uinfos, error) {
 }
 
 // SetDonnop ...
-func SetDonnop(accid string, donnopOpen bool) (*BaseResp, error) {
+func (this *User) SetDonnop(accid string, donnopOpen bool) (*BaseResp, error) {
 	params := url.Values{"accid": {accid}, "donnopOpen": {strconv.FormatBool(donnopOpen)}}
-	data, err := ResponseResult(ACTION_USER_DONNOP_OPEN, params)
+	data, err := ResponseResult(this.APPKEY, this.APPSECRET, this.NONCE, ACTION_USER_DONNOP_OPEN, params)
 	if err != nil {
 		return nil, err
 	}
@@ -241,12 +244,12 @@ func SetDonnop(accid string, donnopOpen bool) (*BaseResp, error) {
 }
 
 // ResponseResult ...
-func ResponseResult(action string, params url.Values) ([]byte, error) {
+func ResponseResult(appkey string, appSecret string, nonce string, action string, params url.Values) ([]byte, error) {
 	req, err := http.NewRequest("POST", action, strings.NewReader(params.Encode()))
 	if err != nil {
 		return nil, err
 	}
-	fillHeader(req)
+	fillHeader(req, appkey, appSecret, nonce)
 	res, err := client.Do(req)
 	if err != nil {
 		return nil, err
@@ -271,11 +274,11 @@ func getCheckSUm(appSecret, nonce, curTime string) string {
 }
 
 // fillHeader ...
-func fillHeader(req *http.Request) {
+func fillHeader(req *http.Request, appkey, appsecret, nonce string) {
 	curTime := strconv.Itoa(int(time.Now().Unix()))
-	req.Header.Add("AppKey", APPKEY)
-	req.Header.Add("Nonce", NONCE)
+	req.Header.Add("AppKey", appkey)
+	req.Header.Add("Nonce", nonce)
 	req.Header.Add("CurTime", curTime)
-	req.Header.Add("CheckSum", getCheckSUm(APPSECRET, NONCE, curTime))
+	req.Header.Add("CheckSum", getCheckSUm(appsecret, nonce, curTime))
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 }
