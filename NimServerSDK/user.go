@@ -52,9 +52,14 @@ type Info struct {
 	Mobile string `json:"mobile"`
 }
 
+type Token struct {
+	Token string `json"token"`
+	Accid string `json"accid"`
+}
+
 type TokenRespose struct {
 	BaseResp
-	Info `json:"info"`
+	Token `json:"info"`
 }
 
 type Uinfos struct {
@@ -119,23 +124,11 @@ func (this *User) Update(accid, props, token string) (*BaseResp, error) {
 
 // RefreshToken ...
 func (this *User) RefreshToken(accid string) (*TokenRespose, error) {
-	reqBody := url.Values{"accid": {accid}}
-	req, err := http.NewRequest("POST", ACTION_USER_REFRESH_TOKEN, strings.NewReader(reqBody.Encode()))
+	resBody, err := ResponseResult(this.APPKEY, this.APPSECRET, this.NONCE, ACTION_USER_REFRESH_TOKEN, url.Values{"accid": {accid}})
 	if err != nil {
 		return nil, err
 	}
 
-	fillHeader(req, this.APPKEY, this.APPSECRET, this.NONCE)
-
-	res, err := client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer res.Body.Close()
-	resBody, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		return nil, err
-	}
 	token := &TokenRespose{}
 	err = json.Unmarshal(resBody, token)
 	if err != nil {
