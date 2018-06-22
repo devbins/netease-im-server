@@ -1,4 +1,4 @@
-package api
+package nimserversdk
 
 import (
 	"encoding/json"

@@ -1,4 +1,4 @@
-package api
+package nimserversdk
 
 import (
 	"crypto/sha1"
