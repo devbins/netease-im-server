@@ -53,8 +53,8 @@ type Info struct {
 }
 
 type Token struct {
-	Token string `json"token"`
-	Accid string `json"accid"`
+	Token string `json:"token"`
+	Accid string `json:"accid"`
 }
 
 type TokenRespose struct {
