@@ -9,7 +9,7 @@ type Nim struct {
 }
 
 // New ...
-func NewNim(appkey, appsecret, nonce string) *Nim {
+func NewNim(appkey, appsecret string) *Nim {
 	return &Nim{
 		APPKEY:    appkey,
 		APPSECRET: appsecret,

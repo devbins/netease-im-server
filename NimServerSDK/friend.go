@@ -31,8 +31,8 @@ type BlackAndMuteList struct {
 }
 
 // AddFriend ...
-func (this *Friend) AddFriend(accid string, faccid string, ftype int, msg string) (*BaseResp, error) {
-	data, err := ResponseResult(this.APPKEY, this.APPSECRET, ACTION_FRIEND_ADD, url.Values{"accid": {accid}, "faccid": {faccid}, "type": {strconv.Itoa(ftype)}, "msg": {msg}})
+func (this *Friend) AddFriend(accid string, faccid string, friendType int, msg string) (*BaseResp, error) {
+	data, err := ResponseResult(this.APPKEY, this.APPSECRET, ACTION_FRIEND_ADD, url.Values{"accid": {accid}, "faccid": {faccid}, "type": {strconv.Itoa(friendType)}, "msg": {msg}})
 	if err != nil {
 		return nil, err
 	}
