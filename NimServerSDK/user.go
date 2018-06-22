@@ -45,7 +45,6 @@ type BaseResp struct {
 }
 
 type Info struct {
-	Token  string `json:"token"`
 	Accid  string `json:"accid"`
 	Name   string `json:"name"`
 	Email  string `json:"email"`
@@ -198,7 +197,8 @@ func (this *User) UnBlock(accid string) (*BaseResp, error) {
 }
 
 // UpdateUinfo ...
-func (this *User) UpdateUinfo(params url.Values) (*BaseResp, error) {
+func (this *User) UpdateUinfo(gender int, accid, name, icon, sign, email, birth, mobile, ex string) (*BaseResp, error) {
+	params := url.Values{"accid": {accid}, "name": {name}, "icon": {icon}, "sign": {sign}, "email": {email}, "birth": {birth}, "mobile": {mobile}, "ex": {ex}, "gender": {strconv.Itoa(gender)}}
 	data, err := ResponseResult(this.APPKEY, this.APPSECRET, this.NONCE, ACTION_USER_UPDATE_UINFO, params)
 	if err != nil {
 		return nil, err
@@ -213,8 +213,12 @@ func (this *User) UpdateUinfo(params url.Values) (*BaseResp, error) {
 }
 
 // GetUinfo ...
-func (this *User) GetUinfo(accids ...string) (*Uinfos, error) {
-	data, err := ResponseResult(this.APPKEY, this.APPSECRET, this.NONCE, ACTION_USER_GET_UINFO, url.Values{"accids": accids})
+func (this *User) GetUinfo(accids []string) (*Uinfos, error) {
+	ids, err := json.Marshal(accids)
+	if err != nil {
+		return nil, err
+	}
+	data, err := ResponseResult(this.APPKEY, this.APPSECRET, this.NONCE, ACTION_USER_GET_UINFO, url.Values{"accids": {string(ids)}})
 	if err != nil {
 		return nil, err
 	}
