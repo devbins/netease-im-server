@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"math/rand"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -34,7 +35,6 @@ const (
 type User struct {
 	APPKEY    string
 	APPSECRET string
-	NONCE     string
 }
 
 var client = http.Client{}
@@ -73,7 +73,7 @@ func (this *User) Create(accid string) (*TokenRespose, error) {
 	if err != nil {
 		return nil, err
 	}
-	fillHeader(req, this.APPKEY, this.APPSECRET, this.NONCE)
+	fillHeader(req, this.APPKEY, this.APPSECRET)
 	res, err := client.Do(req)
 	if err != nil {
 		return nil, err
@@ -100,7 +100,7 @@ func (this *User) Update(accid, props, token string) (*BaseResp, error) {
 		return nil, err
 	}
 
-	fillHeader(req, this.APPKEY, this.APPSECRET, this.NONCE)
+	fillHeader(req, this.APPKEY, this.APPSECRET)
 
 	res, err := client.Do(req)
 	if err != nil {
@@ -124,7 +124,7 @@ func (this *User) Update(accid, props, token string) (*BaseResp, error) {
 
 // RefreshToken ...
 func (this *User) RefreshToken(accid string) (*TokenRespose, error) {
-	resBody, err := ResponseResult(this.APPKEY, this.APPSECRET, this.NONCE, ACTION_USER_REFRESH_TOKEN, url.Values{"accid": {accid}})
+	resBody, err := ResponseResult(this.APPKEY, this.APPSECRET, ACTION_USER_REFRESH_TOKEN, url.Values{"accid": {accid}})
 	if err != nil {
 		return nil, err
 	}
@@ -145,7 +145,7 @@ func (this *User) Block(accid string) (*BaseResp, error) {
 	if err != nil {
 		return nil, err
 	}
-	fillHeader(req, this.APPKEY, this.APPSECRET, this.NONCE)
+	fillHeader(req, this.APPKEY, this.APPSECRET)
 	res, err := client.Do(req)
 	if err != nil {
 		return nil, err
@@ -169,7 +169,7 @@ func (this *User) UnBlock(accid string) (*BaseResp, error) {
 	if err != nil {
 		return nil, err
 	}
-	fillHeader(req, this.APPKEY, this.APPSECRET, this.NONCE)
+	fillHeader(req, this.APPKEY, this.APPSECRET)
 	res, err := client.Do(req)
 	if err != nil {
 		return nil, err
@@ -192,7 +192,7 @@ func (this *User) UnBlock(accid string) (*BaseResp, error) {
 // UpdateUinfo ...
 func (this *User) UpdateUinfo(gender int, accid, name, icon, sign, email, birth, mobile, ex string) (*BaseResp, error) {
 	params := url.Values{"accid": {accid}, "name": {name}, "icon": {icon}, "sign": {sign}, "email": {email}, "birth": {birth}, "mobile": {mobile}, "ex": {ex}, "gender": {strconv.Itoa(gender)}}
-	data, err := ResponseResult(this.APPKEY, this.APPSECRET, this.NONCE, ACTION_USER_UPDATE_UINFO, params)
+	data, err := ResponseResult(this.APPKEY, this.APPSECRET, ACTION_USER_UPDATE_UINFO, params)
 	if err != nil {
 		return nil, err
 	}
@@ -211,7 +211,7 @@ func (this *User) GetUinfo(accids []string) (*Uinfos, error) {
 	if err != nil {
 		return nil, err
 	}
-	data, err := ResponseResult(this.APPKEY, this.APPSECRET, this.NONCE, ACTION_USER_GET_UINFO, url.Values{"accids": {string(ids)}})
+	data, err := ResponseResult(this.APPKEY, this.APPSECRET, ACTION_USER_GET_UINFO, url.Values{"accids": {string(ids)}})
 	if err != nil {
 		return nil, err
 	}
@@ -227,7 +227,7 @@ func (this *User) GetUinfo(accids []string) (*Uinfos, error) {
 // SetDonnop ...
 func (this *User) SetDonnop(accid string, donnopOpen bool) (*BaseResp, error) {
 	params := url.Values{"accid": {accid}, "donnopOpen": {strconv.FormatBool(donnopOpen)}}
-	data, err := ResponseResult(this.APPKEY, this.APPSECRET, this.NONCE, ACTION_USER_DONNOP_OPEN, params)
+	data, err := ResponseResult(this.APPKEY, this.APPSECRET, ACTION_USER_DONNOP_OPEN, params)
 	if err != nil {
 		return nil, err
 	}
@@ -241,12 +241,12 @@ func (this *User) SetDonnop(accid string, donnopOpen bool) (*BaseResp, error) {
 }
 
 // ResponseResult ...
-func ResponseResult(appkey string, appSecret string, nonce string, action string, params url.Values) ([]byte, error) {
+func ResponseResult(appkey string, appSecret string, action string, params url.Values) ([]byte, error) {
 	req, err := http.NewRequest("POST", action, strings.NewReader(params.Encode()))
 	if err != nil {
 		return nil, err
 	}
-	fillHeader(req, appkey, appSecret, nonce)
+	fillHeader(req, appkey, appSecret)
 	res, err := client.Do(req)
 	if err != nil {
 		return nil, err
@@ -271,8 +271,9 @@ func getCheckSUm(appSecret, nonce, curTime string) string {
 }
 
 // fillHeader ...
-func fillHeader(req *http.Request, appkey, appsecret, nonce string) {
+func fillHeader(req *http.Request, appkey, appsecret string) {
 	curTime := strconv.Itoa(int(time.Now().Unix()))
+	nonce := strconv.Itoa(rand.Int())
 	req.Header.Add("AppKey", appkey)
 	req.Header.Add("Nonce", nonce)
 	req.Header.Add("CurTime", curTime)
