@@ -89,8 +89,8 @@ func (this *User) Create(accid string) (*TokenRespose, error) {
 }
 
 // Update ...
-func (this *User) Update(accid string) (*BaseResp, error) {
-	req, err := http.NewRequest("POST", ACTION_USER_UPDATE, strings.NewReader("accid="+accid))
+func (this *User) Update(accid, props, token string) (*BaseResp, error) {
+	req, err := http.NewRequest("POST", ACTION_USER_UPDATE, strings.NewReader(url.Values{"accid": {accid}, "props": {props}, "token": {token}}.Encode()))
 	if err != nil {
 		return nil, err
 	}
