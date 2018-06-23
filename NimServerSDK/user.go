@@ -49,6 +49,16 @@ const (
 	ACTION_TEAM_QUERY_DETAIL       = BASE_URL + "team/queryDetail.action"     // 获取群组详细信息
 	ACTION_TEAM_GET_MARK_READ_INFO = BASE_URL + "team/getMarkReadInfo.action" // 获取群组已读消息的已读详情信息
 	ACTION_TEAM_CHANGE_OWNER       = BASE_URL + "team/changeOwner.action"     // 移交群主
+	ACTION_TEAM_ADD_MANAGER        = BASE_URL + "team/addManager.action"      // 任命管理员
+	ACTION_TEAM_REMOVE_MANAGER     = BASE_URL + "team/removeManager.action"   // 移除管理员
+	ACTION_TEAM_JOIN_TEAM          = BASE_URL + "team/joinTeams.action"       // 获取某用户所加入的群信息
+	ACTION_TEAM_UPDATE_TEAM_NICK   = BASE_URL + "team/updateTeamNick.action"  // 修改群昵称
+	ACTION_TEAM_MUTE               = BASE_URL + "team/muteTeam.action"        // 修改消息提醒开关
+	ACTION_TEAM_MUTE_LIST          = BASE_URL + "team/muteTlist.action"       // 禁言群成员
+	ACTION_TEAM_LEAVE              = BASE_URL + "team/leave.action"           // 主动退群
+	ACTION_TEAM_MUTE_ALL           = BASE_URL + "team/muteTlistAll.action"    // 将群组整体禁言
+	ACTION_TEAM_LIST_TEAM_MUTE     = BASE_URL + "team/listTeamMute.action"    // 获取群组禁言列表
+
 )
 
 type User struct {
