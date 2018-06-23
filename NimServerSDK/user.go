@@ -30,6 +30,15 @@ const (
 	ACTION_FRIEND_UPDATE = BASE_URL + "friend/update.action" // 更新好友相关信息
 	ACTION_FRIEND_DELETE = BASE_URL + "friend/delete.action" // 删除好友
 	ACTION_FRIEND_GET    = BASE_URL + "friend/get.action"    // 获取好友关系
+
+	ACTION_MSG_SNED_MSG              = BASE_URL + "msg/sendMsg.action"            // 发送普通消息
+	ACTION_MSG_SNED_BATCH_MSG        = BASE_URL + "msg/sendBatchMsg.action"       // 批量发送点对点普通消息
+	ACTION_MSG_SEND_ATTACH_MSG       = BASE_URL + "msg/sendAttachMsg.action"      // 发送自定义系统通知
+	ACTION_MSG_SEND_BATCH_ATTACH_MSG = BASE_URL + "msg/sendBatchAttachMsg.action" // 批量发送点对点自定义系统通知
+	ACTION_MSG_UPLOAD                = BASE_URL + "msg/upload.action"             // 文件上传
+	ACTION_MSG_UPLOAD_MULTIPART      = BASE_URL + "msg/fileUpload.action"         // 文件上传 multipart 方式
+	ACTION_MSG_RECALL                = BASE_URL + "msg/recall.action"             // 消息撤回
+	ACTION_MSG_BROADCAST             = BASE_URL + "broadcastMsg.action"
 )
 
 type User struct {

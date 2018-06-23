@@ -3,9 +3,9 @@ package nimserversdk
 type Nim struct {
 	APPKEY    string
 	APPSECRET string
-	NONCE     string
 	User      User
 	Friend    Friend
+	Msg       Msg
 }
 
 // New ...
@@ -18,6 +18,10 @@ func NewNim(appkey, appsecret string) *Nim {
 			APPSECRET: appsecret,
 		},
 		Friend: Friend{
+			APPKEY:    appkey,
+			APPSECRET: appsecret,
+		},
+		Msg: Msg{
 			APPKEY:    appkey,
 			APPSECRET: appsecret,
 		},
