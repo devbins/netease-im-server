@@ -39,6 +39,16 @@ const (
 	ACTION_MSG_UPLOAD_MULTIPART      = BASE_URL + "msg/fileUpload.action"         // 文件上传 multipart 方式
 	ACTION_MSG_RECALL                = BASE_URL + "msg/recall.action"             // 消息撤回
 	ACTION_MSG_BROADCAST             = BASE_URL + "broadcastMsg.action"
+
+	ACTION_TEAM_CREATE             = BASE_URL + "team/create.action"          // 创建群
+	ACTION_TEAM_ADD                = BASE_URL + "team/add.action"             // 拉人入群
+	ACTION_TEAM_KICK               = BASE_URL + "team/kick.action"            // 踢人出群
+	ACTION_TEAM_REMOVE             = BASE_URL + "team/remove.action"          // 解散群
+	ACTION_TEAM_UPDATE             = BASE_URL + "team/update.action"          // 编辑群资料
+	ACTION_TEAM_QUERY              = BASE_URL + "team/query.action"           // 群信息与成员列表查询
+	ACTION_TEAM_QUERY_DETAIL       = BASE_URL + "team/queryDetail.action"     // 获取群组详细信息
+	ACTION_TEAM_GET_MARK_READ_INFO = BASE_URL + "team/getMarkReadInfo.action" // 获取群组已读消息的已读详情信息
+	ACTION_TEAM_CHANGE_OWNER       = BASE_URL + "team/changeOwner.action"     // 移交群主
 )
 
 type User struct {
