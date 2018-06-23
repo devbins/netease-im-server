@@ -3,6 +3,7 @@ package nimserversdk
 import (
 	"encoding/json"
 	"net/url"
+	"strconv"
 )
 
 type Msg struct {
@@ -45,7 +46,7 @@ type BroadcastMsg struct {
 
 // SendMsg ...
 func (msg *Msg) SendMsg(from string, ope int, to string, msgType int, body string, antispam bool, antispamCustom string, option string, pushcontent string, payload string, ext string, forcepushlist string, forcepushcontent string, forcepushall string, bid string, useYidun int, markRead int) (*SendResult, error) {
-	res, err := ResponseResult(msg.APPKEY, msg.APPSECRET, ACTION_MSG_SNED_MSG, url.Values{})
+	res, err := ResponseResult(msg.APPKEY, msg.APPSECRET, ACTION_MSG_SNED_MSG, url.Values{"from": {from}, "ope": {strconv.Itoa(ope)}, "to": {to}, "type": {strconv.Itoa(msgType)}, "body": {body}, "antispam": {strconv.FormatBool(antispam)}, "antispamCustom": {antispamCustom}, "option": {option}, "pushcontent": {pushcontent}, "payload": {payload}, "ext": {ext}, "forcepushlist": {forcepushlist}, "forcepushcontent": {forcepushcontent}, "bid": {bid}, "useYidun": {strconv.Itoa(useYidun)}, "markRead": {strconv.Itoa(markRead)}})
 	if err != nil {
 		return nil, err
 	}
@@ -59,8 +60,8 @@ func (msg *Msg) SendMsg(from string, ope int, to string, msgType int, body strin
 }
 
 // SendBatchMsg ...
-func (msg *Msg) SendBatchMsg(fromAccid string, toAccid string, msgType int, body string, option string, pushcontent string, payload string, ext string, bid string, useYidun int) (*SendResult, error) {
-	res, err := ResponseResult(msg.APPKEY, msg.APPSECRET, ACTION_MSG_SNED_BATCH_MSG, url.Values{})
+func (msg *Msg) SendBatchMsg(fromAccid string, toAccids string, msgType int, body string, option string, pushcontent string, payload string, ext string, bid string, useYidun int) (*SendResult, error) {
+	res, err := ResponseResult(msg.APPKEY, msg.APPSECRET, ACTION_MSG_SNED_BATCH_MSG, url.Values{"fromAccid": {fromAccid}, "toAccids": {toAccids}, "type": {strconv.Itoa(msgType)}, "body": {body}, "option": {option}, "pushcontent": {pushcontent}, "payload": {payload}, "ext": {ext}, "bid": {bid}, "useYidun": {strconv.Itoa(useYidun)}})
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +76,7 @@ func (msg *Msg) SendBatchMsg(fromAccid string, toAccid string, msgType int, body
 
 // SendAttachMsg ...
 func (msg *Msg) SendAttachMsg(from string, msgType int, to string, attach string, pushcontent string, payload string, sound string, save int, option string) (*BaseResp, error) {
-	res, err := ResponseResult(msg.APPKEY, msg.APPSECRET, ACTION_MSG_SEND_ATTACH_MSG, url.Values{})
+	res, err := ResponseResult(msg.APPKEY, msg.APPSECRET, ACTION_MSG_SEND_ATTACH_MSG, url.Values{"from": {from}, "msgtype": {strconv.Itoa(msgType)}, "to": {to}, "attach": {attach}, "pushcontent": {pushcontent}, "payload": {payload}, "sound": {sound}, "save": {strconv.Itoa(save)}, "option": {option}})
 	if err != nil {
 		return nil, err
 	}
@@ -88,8 +89,8 @@ func (msg *Msg) SendAttachMsg(from string, msgType int, to string, attach string
 }
 
 // SendBatchAttachMsg ...
-func (msg *Msg) SendBatchAttachMsg(fromAccid string, toAccids []string, attach string, pushcontent string, payload string, sound string, save int, option string) (*SendResult, error) {
-	res, err := ResponseResult(msg.APPKEY, msg.APPKEY, ACTION_MSG_SEND_BATCH_ATTACH_MSG, url.Values{})
+func (msg *Msg) SendBatchAttachMsg(fromAccid string, toAccids string, attach string, pushcontent string, payload string, sound string, save int, option string) (*SendResult, error) {
+	res, err := ResponseResult(msg.APPKEY, msg.APPKEY, ACTION_MSG_SEND_BATCH_ATTACH_MSG, url.Values{"fromAccid": {fromAccid}, "toAccids": {toAccids}, "attach": {attach}, "pushcontent": {pushcontent}, "payload": {payload}, "sound": {sound}, "save": {strconv.Itoa(save)}, "option": {option}})
 	if err != nil {
 		return nil, err
 	}
@@ -104,7 +105,7 @@ func (msg *Msg) SendBatchAttachMsg(fromAccid string, toAccids []string, attach s
 
 // MsgUpload ...
 func (msg *Msg) MsgUpload(content string, fileType string, isHttps bool) (*UploadResult, error) {
-	res, err := ResponseResult(msg.APPKEY, msg.APPSECRET, ACTION_MSG_UPLOAD, url.Values{})
+	res, err := ResponseResult(msg.APPKEY, msg.APPSECRET, ACTION_MSG_UPLOAD, url.Values{"content": {content}, "type": {fileType}, "ishttps": {strconv.FormatBool(isHttps)}})
 	if err != nil {
 		return nil, err
 	}
@@ -134,7 +135,7 @@ func (msg *Msg) MsgUploadByMultiPart(content string, fileType string, isHttps bo
 
 // MsgRecall ...
 func (msg *Msg) MsgRecall(deleteMsgid string, timetag string, msgType int, from, to, msgDesc, ignoreTime string) (*BaseResp, error) {
-	res, err := ResponseResult(msg.APPKEY, msg.APPSECRET, ACTION_MSG_RECALL, url.Values{})
+	res, err := ResponseResult(msg.APPKEY, msg.APPSECRET, ACTION_MSG_RECALL, url.Values{"deleteMsgid": {deleteMsgid}, "timetag": {timetag}, "type": {strconv.Itoa(msgType)}, "from": {from}, "to": {to}, "msg": {msgDesc}, "ignoreTime": {ignoreTime}})
 	if err != nil {
 		return nil, err
 	}
@@ -149,7 +150,7 @@ func (msg *Msg) MsgRecall(deleteMsgid string, timetag string, msgType int, from,
 
 // Broadcast ...
 func (msg *Msg) Broadcast(body string, from string, isOffline bool, ttl int, targetOs string) (*Broadcast, error) {
-	res, err := ResponseResult(msg.APPKEY, msg.APPSECRET, ACTION_MSG_BROADCAST, url.Values{})
+	res, err := ResponseResult(msg.APPKEY, msg.APPSECRET, ACTION_MSG_BROADCAST, url.Values{"body": {body}, "from": {from}, "isOffline": {strconv.FormatBool(isOffline)}, "ttl": {strconv.Itoa(ttl)}, "targetOs": {targetOs}})
 	if err != nil {
 		return nil, err
 	}
@@ -159,5 +160,4 @@ func (msg *Msg) Broadcast(body string, from string, isOffline bool, ttl int, tar
 		return nil, err
 	}
 	return broadcastResult, nil
-
 }
