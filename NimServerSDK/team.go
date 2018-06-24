@@ -136,7 +136,7 @@ func (team *Team) Query(tids string, ope int) (*QueryResult, error) {
 	queryResult := &QueryResult{}
 	err = json.Unmarshal(res, queryResult)
 	if err != nil {
-		return nil, queryResult
+		return nil, err
 	}
 	return queryResult, nil
 
