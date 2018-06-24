@@ -22,6 +22,11 @@ type Exceed struct {
 	Msg   string   `json:"msg"`
 }
 
+type AddResult struct {
+	BaseResp
+	Faccid Exceed `json:"faccid"`
+}
+
 // Create ...
 func (team *Team) Create(tname string, owner string, members string, announcement string, intro string, msg string, magree int, joinmode int, custom string, icon string, beinvitemode int, invitemode int, uptinfomode int, upcustommode int) (*CreateResult, error) {
 
@@ -35,5 +40,20 @@ func (team *Team) Create(tname string, owner string, members string, announcemen
 		return nil, err
 	}
 	return result, nil
+
+}
+
+// Add ...
+func (team *Team) Add(tid string, owner string, members string, magree int, msg string, attach string) (*AddResult, error) {
+	res, err := ResponseResult(team.APPKEY, team.APPSECRET, ACTION_TEAM_ADD, url.Values{"tid": {tid}, "owner": {owner}, "members": {members}, "magree": {strconv.Itoa(magree)}, "msg": {msg}, "attach": {attach}})
+	if err != nil {
+		return nil, err
+	}
+	addRusult := &AddResult{}
+	err = json.Unmarshal(res, addRusult)
+	if err != nil {
+		return nil, err
+	}
+	return addRusult, err
 
 }
