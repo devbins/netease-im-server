@@ -73,3 +73,18 @@ func (team *Team) Kick(tid, owner, member, members, attach string) (*BaseResp, e
 	return result, nil
 
 }
+
+// Remove ...
+func (team *Team) Remove(tid, owner string) (*BaseResp, error) {
+	res, err := ResponseResult(team.APPKEY, team.APPSECRET, ACTION_TEAM_REMOVE, url.Values{"tid": {tid}, "owner": {owner}})
+	if err != nil {
+		return nil, err
+	}
+	result := &BaseResp{}
+	err = json.Unmarshal(res, result)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+
+}
