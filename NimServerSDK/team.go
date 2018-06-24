@@ -57,3 +57,19 @@ func (team *Team) Add(tid string, owner string, members string, magree int, msg 
 	return addRusult, err
 
 }
+
+// Kick ...
+func (team *Team) Kick(tid, owner, member, members, attach string) (*BaseResp, error) {
+	res, err := ResponseResult(team.APPKEY, team.APPSECRET, ACTION_TEAM_KICK, url.Values{"tid": {tid}, "owner": {owner}, "member": {member}, "members": {members}, "attach": {attach}})
+	if err != nil {
+		return nil, err
+	}
+	result := &BaseResp{}
+	err = json.Unmarshal(res, result)
+
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+
+}
