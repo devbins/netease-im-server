@@ -6,6 +6,7 @@ type Nim struct {
 	User      User
 	Friend    Friend
 	Msg       Msg
+	Team      Team
 }
 
 // New ...
@@ -22,6 +23,10 @@ func NewNim(appkey, appsecret string) *Nim {
 			APPSECRET: appsecret,
 		},
 		Msg: Msg{
+			APPKEY:    appkey,
+			APPSECRET: appsecret,
+		},
+		Team: Team{
 			APPKEY:    appkey,
 			APPSECRET: appsecret,
 		},
