@@ -27,6 +27,29 @@ type AddResult struct {
 	Faccid Exceed `json:"faccid"`
 }
 
+type QueryResult struct {
+	BaseResp
+	Tinfos []Tinfo `json:"tinfos"`
+}
+
+type Tinfo struct {
+	Tname        string   `json:"tname"`
+	Announcement string   `json:"announcement"`
+	Owner        string   `json:"owner"`
+	Maxusers     int      `json:"maxusers"`
+	Joinmode     int      `json:"joinmode"`
+	Tid          int      `json:"tid"`
+	Intro        string   `json:"intro"`
+	Size         int      `json:"size"`
+	Custom       string   `json:"custom"`
+	ClientCustom string   `json:"clientCustom"`
+	Mute         bool     `json:"mute"`
+	Createtime   int64    `json:"createtime"`
+	Updatetime   int64    `json:"updatetime"`
+	Admins       []string `json:"admins"`
+	Members      []string `json:"members"`
+}
+
 // Create ...
 func (team *Team) Create(tname string, owner string, members string, announcement string, intro string, msg string, magree int, joinmode int, custom string, icon string, beinvitemode int, invitemode int, uptinfomode int, upcustommode int) (*CreateResult, error) {
 
@@ -101,5 +124,20 @@ func (team *Team) Update(tid string, tname string, owner string, announcement st
 		return nil, err
 	}
 	return result, nil
+
+}
+
+// Query ...
+func (team *Team) Query(tids string, ope int) (*QueryResult, error) {
+	res, err := ResponseResult(team.APPKEY, team.APPSECRET, ACTION_TEAM_QUERY, url.Values{"tids": {tids}, "ope": {strconv.Itoa(ope)}})
+	if err != nil {
+		return nil, err
+	}
+	queryResult := &QueryResult{}
+	err = json.Unmarshal(res, queryResult)
+	if err != nil {
+		return nil, queryResult
+	}
+	return queryResult, nil
 
 }
