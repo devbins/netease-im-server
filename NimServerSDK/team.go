@@ -50,6 +50,42 @@ type Tinfo struct {
 	Members      []string `json:"members"`
 }
 
+type TeamMember struct {
+	Createtime int64  `json:"createtime"`
+	Updatetime int64  `json:"updatetime"`
+	Nick       string `json:"nick"`
+	Accid      string `json:"accid"`
+	Mute       bool   `json:"mute"`
+	Custom     string `json:"custom"`
+}
+
+type TDetailInfo struct {
+	Icon         string       `json:"icon"`
+	Announcement string       `json:"announcement"`
+	Uptinfomode  int          `json:"uptinfomode"`
+	Maxusers     int          `json:"maxusers"`
+	Intro        string       `json:"intro"`
+	Upcustommode int          `json:"upcustommode"`
+	Tname        string       `json:"tname"`
+	Beinvitemode int          `json:"beinvitemode"`
+	Joinmode     int          `json:"joinmode"`
+	Tid          int          `json:"tid"`
+	Invitemode   int          `json:"invitemode"`
+	Mute         bool         `json:"mute"`
+	Custom       string       `json:"custom"`
+	ClientCustom string       `json:"clientCustom"`
+	Createtime   int64        `json:"createtime"`
+	Updatetime   int64        `json:"updatetime"`
+	Owner        TeamMember   `json:"owner"`
+	Admins       []TeamMember `json:"admins"`
+	Members      []TeamMember `json:"members"`
+}
+
+type QueryDetailResult struct {
+	BaseResp
+	TDetailInfo `json:"tinfo"`
+}
+
 // Create ...
 func (team *Team) Create(tname string, owner string, members string, announcement string, intro string, msg string, magree int, joinmode int, custom string, icon string, beinvitemode int, invitemode int, uptinfomode int, upcustommode int) (*CreateResult, error) {
 
@@ -139,5 +175,20 @@ func (team *Team) Query(tids string, ope int) (*QueryResult, error) {
 		return nil, err
 	}
 	return queryResult, nil
+
+}
+
+// QueryDetail ...
+func (team *Team) QueryDetail(tid int64) (*TDetailInfo, error) {
+	res, err := ResponseResult(team.APPKEY, team.APPSECRET, ACTION_TEAM_QUERY_DETAIL, url.Values{"tid": {strconv.FormatInt(tid, 10)}})
+	if err != nil {
+		return nil, err
+	}
+	tinfo := &TDetailInfo{}
+	err = json.Unmarshal(res, tinfo)
+	if err != nil {
+		return nil, err
+	}
+	return tinfo, err
 
 }
