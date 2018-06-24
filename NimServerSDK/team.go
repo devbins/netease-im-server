@@ -88,3 +88,18 @@ func (team *Team) Remove(tid, owner string) (*BaseResp, error) {
 	return result, nil
 
 }
+
+// Update ...
+func (team *Team) Update(tid string, tname string, owner string, announcement string, intro string, joinmode int, custom string, icon string, beinvitemode, invitemode, uptinfomode, upcustommode int) (*BaseResp, error) {
+	res, err := ResponseResult(team.APPKEY, team.APPSECRET, ACTION_TEAM_UPDATE, url.Values{"tid": {tid}, "tname": {tname}, "owner": {owner}, "announcement": {announcement}, "intro": {intro}, "joinmode": {strconv.Itoa(joinmode)}, "custom": {custom}, "icon": {icon}, "beinvitemode": {strconv.Itoa(beinvitemode)}, "invitemode": {strconv.Itoa(invitemode)}, "uptinfomode": {strconv.Itoa(uptinfomode)}, "upcustommode": {strconv.Itoa(upcustommode)}})
+	if err != nil {
+		return nil, err
+	}
+	result := &BaseResp{}
+	err = json.Unmarshal(res, result)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+
+}
