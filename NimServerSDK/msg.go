@@ -123,7 +123,7 @@ func (msg *Msg) Upload(content string, fileType string, isHttps bool) (*UploadRe
 }
 
 // MsgUpload ...
-func (msg *Msg) UploadByMultiPart(content string, fileType string, isHttps bool) (*UploadResult, error) {
+func (msg *Msg) UploadByMultiPart(content []byte, fileType string, isHttps bool) (*UploadResult, error) {
 	buf := new(bytes.Buffer)
 	w := multipart.NewWriter(buf)
 	err := w.WriteField("type", fileType)
@@ -138,7 +138,7 @@ func (msg *Msg) UploadByMultiPart(content string, fileType string, isHttps bool)
 	if err != nil {
 		return nil, err
 	}
-	_, err = fw.Write([]byte(content))
+	_, err = fw.Write(content)
 	if err != nil {
 		return nil, err
 	}
