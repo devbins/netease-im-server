@@ -114,11 +114,14 @@ type TeamInfo struct {
 }
 
 type Mute struct {
-	BaseResp
 	Nick  string `json:"nick"`
 	Accid string `json:"accid"`
 	Tid   string `json:"tid"`
 	Type  int    `json:"type"`
+}
+type MuteResult struct {
+	BaseResp
+	Mutes []Mute `json:"mutes"`
 }
 
 // Create ...
@@ -379,12 +382,12 @@ func (team *Team) MuteTeamListAll(tid string, owner string, mute bool, muteType 
 }
 
 // ListTeamMute ...
-func (team *Team) ListTeamMute(tid, owner string) (*Mute, error) {
+func (team *Team) ListTeamMute(tid, owner string) (*MuteResult, error) {
 	res, err := ResponseResult(team.APPKEY, team.APPSECRET, ACTION_TEAM_LIST_TEAM_MUTE, url.Values{"tid": {tid}, "owner": {owner}})
 	if err != nil {
 		return nil, err
 	}
-	mute := &Mute{}
+	mute := &MuteResult{}
 	err = json.Unmarshal(res, mute)
 	if err != nil {
 		return nil, err
