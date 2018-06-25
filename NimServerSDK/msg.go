@@ -104,7 +104,7 @@ func (msg *Msg) SendBatchAttachMsg(fromAccid string, toAccids string, attach str
 }
 
 // MsgUpload ...
-func (msg *Msg) MsgUpload(content string, fileType string, isHttps bool) (*UploadResult, error) {
+func (msg *Msg) Upload(content string, fileType string, isHttps bool) (*UploadResult, error) {
 	res, err := ResponseResult(msg.APPKEY, msg.APPSECRET, ACTION_MSG_UPLOAD, url.Values{"content": {content}, "type": {fileType}, "ishttps": {strconv.FormatBool(isHttps)}})
 	if err != nil {
 		return nil, err
@@ -119,7 +119,7 @@ func (msg *Msg) MsgUpload(content string, fileType string, isHttps bool) (*Uploa
 }
 
 // MsgUpload ...
-func (msg *Msg) MsgUploadByMultiPart(content string, fileType string, isHttps bool) (*UploadResult, error) {
+func (msg *Msg) UploadByMultiPart(content string, fileType string, isHttps bool) (*UploadResult, error) {
 	res, err := ResponseResult(msg.APPKEY, msg.APPSECRET, ACTION_MSG_UPLOAD, url.Values{})
 	if err != nil {
 		return nil, err
@@ -134,7 +134,7 @@ func (msg *Msg) MsgUploadByMultiPart(content string, fileType string, isHttps bo
 }
 
 // MsgRecall ...
-func (msg *Msg) MsgRecall(deleteMsgid string, timetag string, msgType int, from, to, msgDesc, ignoreTime string) (*BaseResp, error) {
+func (msg *Msg) Recall(deleteMsgid string, timetag string, msgType int, from, to, msgDesc, ignoreTime string) (*BaseResp, error) {
 	res, err := ResponseResult(msg.APPKEY, msg.APPSECRET, ACTION_MSG_RECALL, url.Values{"deleteMsgid": {deleteMsgid}, "timetag": {timetag}, "type": {strconv.Itoa(msgType)}, "from": {from}, "to": {to}, "msg": {msgDesc}, "ignoreTime": {ignoreTime}})
 	if err != nil {
 		return nil, err
