@@ -32,6 +32,18 @@ type QueryResult struct {
 	Tinfos []Tinfo `json:"tinfos"`
 }
 
+type ReadInfoResult struct {
+	BaseResp
+	Data ReadInfo `json:"data"`
+}
+
+type ReadInfo struct {
+	ReadSize     int      `json:"readSize"`
+	UnreadSize   int      `json:"unreadSize"`
+	Readaccids   []string `json:"readAccids"`
+	UnreadAccids []string `json:"unreadAccids"`
+}
+
 type Tinfo struct {
 	Tname        string   `json:"tname"`
 	Announcement string   `json:"announcement"`
@@ -190,5 +202,20 @@ func (team *Team) QueryDetail(tid int64) (*TDetailInfo, error) {
 		return nil, err
 	}
 	return tinfo, err
+
+}
+
+// GetMarkReadInfo ...
+func (team *Team) GetMarkReadInfo(tid int64, msgId int64, fromAccid string, snapshot bool) (*ReadInfoResult, error) {
+	res, err := ResponseResult(team.APPKEY, team.APPSECRET, ACTION_TEAM_GET_MARK_READ_INFO, url.Values{"tid": {strconv.FormatInt(tid, 10)}, "msgid": {strconv.FormatInt(msgId, 10)}, "fromAccid": {fromAccid}, "snapshot": {strconv.FormatBool(snapshot)}})
+	if err != nil {
+		return nil, err
+	}
+	readInfoResult := &ReadInfoResult{}
+	err = json.Unmarshal(res, readInfoResult)
+	if err != nil {
+		return nil, err
+	}
+	return readInfoResult, nil
 
 }
