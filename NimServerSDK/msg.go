@@ -160,6 +160,9 @@ func (msg *Msg) UploadByMultiPart(content []byte, fileType string, isHttps bool)
 
 	defer res.Body.Close()
 	resBody, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
 
 	uploadResult := &UploadResult{}
 	err = json.Unmarshal(resBody, uploadResult)
