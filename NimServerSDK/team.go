@@ -234,3 +234,18 @@ func (team *Team) ChangetOwner(tid string, owner string, newowner string, leave 
 	return result, nil
 
 }
+
+// AddManager ...
+func (team *Team) AddManager(tid, owner, members string) (*BaseResp, error) {
+	res, err := ResponseResult(team.APPKEY, team.APPSECRET, ACTION_TEAM_ADD_MANAGER, url.Values{"tid": {tid}, "owner": {owner}, "members": {members}})
+	if err != nil {
+		return nil, err
+	}
+	result := &BaseResp{}
+	err = json.Unmarshal(res, result)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+
+}
