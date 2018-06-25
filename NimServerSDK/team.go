@@ -339,3 +339,18 @@ func (team *Team) MuteTeamList(tid string, owner string, accid string, mute int)
 	return result, nil
 
 }
+
+// Leave ...
+func (team *Team) Leave(tid, accid string) (*BaseResp, error) {
+	res, err := ResponseResult(team.APPKEY, team.APPSECRET, ACTION_TEAM_LEAVE, url.Values{"tid": {tid}, "accid": {accid}})
+	if err != nil {
+		return nil, err
+	}
+	result := &BaseResp{}
+	err = json.Unmarshal(res, result)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+
+}
