@@ -309,3 +309,18 @@ func (team *Team) UpdateTeamNick(tid, owner, accid, nick, custom string) (*BaseR
 	return result, nil
 
 }
+
+// MuteTeam ...
+func (team *Team) MuteTeam(tid string, accid string, ope int) (*BaseResp, error) {
+	res, err := ResponseResult(team.APPKEY, team.APPSECRET, ACTION_TEAM_MUTE, url.Values{"tid": {tid}, "accid": {accid}, "ope": {strconv.Itoa(ope)}})
+	if err != nil {
+		return nil, err
+	}
+	result := &BaseResp{}
+	err = json.Unmarshal(res, result)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+
+}
