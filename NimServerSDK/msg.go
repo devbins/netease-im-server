@@ -1,7 +1,11 @@
 package nimserversdk
 
 import (
+	"bytes"
 	"encoding/json"
+	"io/ioutil"
+	"mime/multipart"
+	"net/http"
 	"net/url"
 	"strconv"
 )
@@ -105,7 +109,7 @@ func (msg *Msg) SendBatchAttachMsg(fromAccid string, toAccids string, attach str
 
 // MsgUpload ...
 func (msg *Msg) Upload(content string, fileType string, isHttps bool) (*UploadResult, error) {
-	res, err := ResponseResult(msg.APPKEY, msg.APPSECRET, ACTION_MSG_UPLOAD, url.Values{"content": {content}, "type": {fileType}, "ishttps": {strconv.FormatBool(isHttps)}})
+	res, err := ResponseResult(msg.APPKEY, msg.APPSECRET, ACTION_MSG_UPLOAD, url.Values{})
 	if err != nil {
 		return nil, err
 	}
@@ -120,12 +124,45 @@ func (msg *Msg) Upload(content string, fileType string, isHttps bool) (*UploadRe
 
 // MsgUpload ...
 func (msg *Msg) UploadByMultiPart(content string, fileType string, isHttps bool) (*UploadResult, error) {
-	res, err := ResponseResult(msg.APPKEY, msg.APPSECRET, ACTION_MSG_UPLOAD, url.Values{})
+	buf := new(bytes.Buffer)
+	w := multipart.NewWriter(buf)
+	err := w.WriteField("type", fileType)
 	if err != nil {
 		return nil, err
 	}
+	err = w.WriteField("ishttps", strconv.FormatBool(isHttps))
+	if err != nil {
+		return nil, err
+	}
+	fw, err := w.CreateFormField("content")
+	if err != nil {
+		return nil, err
+	}
+	_, err = fw.Write([]byte(content))
+	if err != nil {
+		return nil, err
+	}
+	err = w.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", ACTION_MSG_UPLOAD_MULTIPART, buf)
+	if err != nil {
+		return nil, err
+	}
+	fillHeader(req, msg.APPKEY, msg.APPSECRET)
+	req.Header.Set("Content-Type", w.FormDataContentType())
+	res, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	defer res.Body.Close()
+	resBody, err := ioutil.ReadAll(res.Body)
+
 	uploadResult := &UploadResult{}
-	err = json.Unmarshal(res, uploadResult)
+	err = json.Unmarshal(resBody, uploadResult)
 	if err != nil {
 		return nil, err
 	}
