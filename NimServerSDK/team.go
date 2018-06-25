@@ -98,6 +98,21 @@ type QueryDetailResult struct {
 	TDetailInfo `json:"tinfo"`
 }
 
+type JoinTeamResult struct {
+	BaseResp
+	Count int        `json:"count"`
+	Infos []TeamInfo `json:"infos"`
+}
+
+type TeamInfo struct {
+	Owner    string `json:"owner"`
+	Tname    string `json:"tname"`
+	MaxUsers int    `json:"maxusers"`
+	Tid      int    `json:"tid"`
+	Size     int    `json:"size"`
+	Custom   string `json:"custom"`
+}
+
 // Create ...
 func (team *Team) Create(tname string, owner string, members string, announcement string, intro string, msg string, magree int, joinmode int, custom string, icon string, beinvitemode int, invitemode int, uptinfomode int, upcustommode int) (*CreateResult, error) {
 
@@ -262,5 +277,20 @@ func (team *Team) RemoveManager(tid, owner, members string) (*BaseResp, error) {
 		return nil, err
 	}
 	return result, nil
+
+}
+
+// JoinTeams ...
+func (team *Team) JoinTeams(accid string) (*TeamInfo, error) {
+	res, err := ResponseResult(team.APPKEY, team.APPSECRET, ACTION_TEAM_JOIN_TEAM, url.Values{"accid": {accid}})
+	if err != nil {
+		return nil, err
+	}
+	teamInfo := &TeamInfo{}
+	err = json.Unmarshal(res, teamInfo)
+	if err != nil {
+		return nil, err
+	}
+	return teamInfo, nil
 
 }
