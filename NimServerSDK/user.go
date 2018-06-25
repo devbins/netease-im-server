@@ -81,14 +81,14 @@ type Info struct {
 	Mobile string `json:"mobile"`
 }
 
-type Token struct {
+type TokenInfo struct {
 	Token string `json:"token"`
 	Accid string `json:"accid"`
 }
 
 type TokenRespose struct {
 	BaseResp
-	Token `json:"info"`
+	TokenInfo TokenInfo `json:"info"`
 }
 
 type Uinfos struct {
