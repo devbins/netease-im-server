@@ -113,6 +113,14 @@ type TeamInfo struct {
 	Custom   string `json:"custom"`
 }
 
+type Mute struct {
+	BaseResp
+	Nick  string `json:"nick"`
+	Accid string `json:"accid"`
+	Tid   string `json:"tid"`
+	Type  int    `json:"type"`
+}
+
 // Create ...
 func (team *Team) Create(tname string, owner string, members string, announcement string, intro string, msg string, magree int, joinmode int, custom string, icon string, beinvitemode int, invitemode int, uptinfomode int, upcustommode int) (*CreateResult, error) {
 
@@ -367,5 +375,20 @@ func (team *Team) MuteTeamListAll(tid string, owner string, mute bool, muteType 
 		return nil, err
 	}
 	return result, nil
+
+}
+
+// ListTeamMute ...
+func (team *Team) ListTeamMute(tid, owner string) (*Mute, error) {
+	res, err := ResponseResult(team.APPKEY, team.APPSECRET, ACTION_TEAM_LIST_TEAM_MUTE, url.Values{"tid": {tid}, "owner": {owner}})
+	if err != nil {
+		return nil, err
+	}
+	mute := &Mute{}
+	err = json.Unmarshal(res, mute)
+	if err != nil {
+		return nil, err
+	}
+	return mute, nil
 
 }
