@@ -294,3 +294,18 @@ func (team *Team) JoinTeams(accid string) (*TeamInfo, error) {
 	return teamInfo, nil
 
 }
+
+// UpdateTeamNick ...
+func (team *Team) UpdateTeamNick(tid, owner, accid, nick, custom string) (*BaseResp, error) {
+	res, err := ResponseResult(team.APPKEY, team.APPSECRET, ACTION_TEAM_UPDATE_TEAM_NICK, url.Values{"tid": {tid}, "owner": {owner}, "accid": {accid}, "nick": {nick}, "custom": {custom}})
+	if err != nil {
+		return nil, err
+	}
+	result := &BaseResp{}
+	err = json.Unmarshal(res, result)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+
+}
