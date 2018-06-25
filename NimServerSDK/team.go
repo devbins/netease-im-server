@@ -324,3 +324,18 @@ func (team *Team) MuteTeam(tid string, accid string, ope int) (*BaseResp, error)
 	return result, nil
 
 }
+
+// MuteTeamList ...
+func (team *Team) MuteTeamList(tid string, owner string, accid string, mute int) (*BaseResp, error) {
+	res, err := ResponseResult(team.APPKEY, team.APPSECRET, ACTION_TEAM_MUTE_LIST, url.Values{"tid": {tid}, "owner": {owner}, "accid": {accid}, "mute": {strconv.Itoa(mute)}})
+	if err != nil {
+		return nil, err
+	}
+	result := &BaseResp{}
+	err = json.Unmarshal(res, result)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+
+}
