@@ -219,3 +219,18 @@ func (team *Team) GetMarkReadInfo(tid int64, msgId int64, fromAccid string, snap
 	return readInfoResult, nil
 
 }
+
+// ChangetOwner ...
+func (team *Team) ChangetOwner(tid string, owner string, newowner string, leave int) (*BaseResp, error) {
+	res, err := ResponseResult(team.APPKEY, team.APPSECRET, ACTION_TEAM_CHANGE_OWNER, url.Values{"tid": {tid}, "owner": {owner}, "newowner": {newowner}, "leave": {strconv.Itoa(leave)}})
+	if err != nil {
+		return nil, err
+	}
+	result := &BaseResp{}
+	err = json.Unmarshal(res, result)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+
+}
