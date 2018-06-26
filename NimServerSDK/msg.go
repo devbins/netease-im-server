@@ -2,6 +2,7 @@ package nimserversdk
 
 import (
 	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"io/ioutil"
 	"mime/multipart"
@@ -108,8 +109,8 @@ func (msg *Msg) SendBatchAttachMsg(fromAccid string, toAccids string, attach str
 }
 
 // MsgUpload ...
-func (msg *Msg) Upload(content string, fileType string, isHttps bool) (*UploadResult, error) {
-	res, err := ResponseResult(msg.APPKEY, msg.APPSECRET, ACTION_MSG_UPLOAD, url.Values{})
+func (msg *Msg) Upload(content []byte, fileType string, isHttps bool) (*UploadResult, error) {
+	res, err := ResponseResult(msg.APPKEY, msg.APPSECRET, ACTION_MSG_UPLOAD, url.Values{"content": {base64.StdEncoding.EncodeToString(content)}, "type": {fileType}, "ishttps": {strconv.FormatBool(isHttps)}})
 	if err != nil {
 		return nil, err
 	}
