@@ -72,7 +72,7 @@ const (
 	ACTION_CHATROOM_TEMPORARY_MUTE      = BASE_URL + "chatroom/temporaryMute.action"    // 设置临时禁言状态
 	ACTION_CHATROOM_QUEUE_OFFER         = BASE_URL + "chatroom/queueOffer.action"       // 往聊天室有序队列中新加或更新元素
 	ACTION_CHATROOM_QUEUE_POLL          = BASE_URL + "chatroom/queuePoll.action"        // 从队列中取出元素
-	ACTION_CHATROOM_QUEUE_LIST          = BASE_URL + "chatroom/queueList.action"        // 排序；列出队列中所有元素
+	ACTION_CHATROOM_QUEUE_LIST          = BASE_URL + "chatroom/queueList.action"        // 排序列出队列中所有元素
 	ACTION_CHATROOM_QUEUE_DROP          = BASE_URL + "chatroom/queueDrop.action"        // 删除清理整个队列
 	ACTION_CAHTROOM_QUEUE_INIT          = BASE_URL + "chatroom/queueInit.action"        // 初始化队列
 	ACTION_CHATROOM_MUTE_ROOM           = BASE_URL + "chatroom/muteRoom.action"         // 将聊天室整体禁言
