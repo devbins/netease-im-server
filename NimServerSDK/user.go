@@ -59,6 +59,28 @@ const (
 	ACTION_TEAM_MUTE_ALL           = BASE_URL + "team/muteTlistAll.action"    // 将群组整体禁言
 	ACTION_TEAM_LIST_TEAM_MUTE     = BASE_URL + "team/listTeamMute.action"    // 获取群组禁言列表
 
+	ACTION_CHATROOM_CREATE              = BASE_URL + "chatroom/create.action"           // 创建聊天室
+	ACTION_CHATROOM_GET                 = BASE_URL + "chatroom/get.action"              // 查询聊天室信息
+	ACTION_CAHTROOM_GET_BATCH           = BASE_URL + "chatroom/getBatch.action"         // 批量查询聊天室信息
+	ACTION_CHATROOM_UPDATE              = BASE_URL + "chatroom/update.action"           // 更新聊天室信息
+	ACTION_CHATROOM_TOGGLE_CLOSE_STAT   = BASE_URL + "chatroom/toggleCloseStat.action"  // 修改聊天室开/关闭状态
+	ACTION_CHATROOM_SET_MEMBER_ROLE     = BASE_URL + "chatroom/setMemberRole.action"    // 设置聊天室内用户角色
+	ACTION_CHATROOM_REQUEST_ADDR        = BASE_URL + "chatroom/requestAddr.action"      // 请求聊天室地址
+	ACTION_CHATROOM_SEND_MSG            = BASE_URL + "chatroom/sendMsg.action"          // 发送聊天室消息
+	ACTION_CHATROOM_ADD_ROBOT           = BASE_URL + "chatroom/addRobot.action"         // 往聊天室内添加机器人
+	ACTION_CHATROOM_REMOVE_ROBOT        = BASE_URL + "chatroom/removeRobot.action"      // 从聊天室内删除机器人
+	ACTION_CHATROOM_TEMPORARY_MUTE      = BASE_URL + "chatroom/temporaryMute.action"    // 设置临时禁言状态
+	ACTION_CHATROOM_QUEUE_OFFER         = BASE_URL + "chatroom/queueOffer.action"       // 往聊天室有序队列中新加或更新元素
+	ACTION_CHATROOM_QUEUE_POLL          = BASE_URL + "chatroom/queuePoll.action"        // 从队列中取出元素
+	ACTION_CHATROOM_QUEUE_LIST          = BASE_URL + "chatroom/queueList.action"        // 排序；列出队列中所有元素
+	ACTION_CHATROOM_QUEUE_DROP          = BASE_URL + "chatroom/queueDrop.action"        // 删除清理整个队列
+	ACTION_CAHTROOM_QUEUE_INIT          = BASE_URL + "chatroom/queueInit.action"        // 初始化队列
+	ACTION_CHATROOM_MUTE_ROOM           = BASE_URL + "chatroom/muteRoom.action"         // 将聊天室整体禁言
+	ACTION_CHATROOM_TOPN                = BASE_URL + "chatroom/topn.action"             // 查询聊天室统计指标TopN
+	ACTION_CHATROOM_MEMBERS_BY_PAGE     = BASE_URL + "chatroom/membersByPage.action"    // 分页获取成员列表
+	ACTION_CHATROOM_QUERY_MEMBERS       = BASE_URL + "chatroom/queryMembers.action"     // 批量获取在线成员信息
+	ACTION_CHATROOM_UPDATE_MY_ROOM_ROLE = BASE_URL + "chatroom/updateMyRoomRole.action" // 变更聊天室内的角色信息
+
 )
 
 type User struct {
