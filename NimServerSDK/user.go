@@ -88,7 +88,7 @@ type User struct {
 	APPSECRET string
 }
 
-var client = http.Client{}
+var client = http.DefaultClient
 
 type BaseResp struct {
 	Code int    `json:"code"`
