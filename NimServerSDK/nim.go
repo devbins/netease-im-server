@@ -48,7 +48,7 @@ func NewNim(appkey, appsecret string) *Nim {
 
 // ResponseResult ...
 func ResponseResult(appkey string, appSecret string, action string, params url.Values) ([]byte, error) {
-	req, err := http.NewRequest("POST", action, strings.NewReader(params.Encode()))
+	req, err := http.NewRequest(http.MethodPost, action, strings.NewReader(params.Encode()))
 	if err != nil {
 		return nil, err
 	}
