@@ -73,6 +73,25 @@ type AddrResult struct {
 	BaseResp
 }
 
+type ChatroomSendMsgResult struct {
+	BaseResp
+	Desc SendMsgResult `json:"desc"`
+}
+
+type SendMsgResult struct {
+	Time             string `json:"time"`
+	FromAvator       string `json:"fromAvator"`
+	Msgid_client     string `json:"msgid_client"`
+	FromClientType   string `json:"fromClientType"`
+	Attach           string `json:"attach"`
+	RoomId           string `json:"roomId"`
+	FromAccount      string `json:"fromAccount"`
+	FromNick         string `json:"fromNick"`
+	Type             string `json:"type"`
+	Ext              string `json:"ext"`
+	HighPriorityFlag int    `json:"highPriorityFlag"`
+}
+
 // Create ...
 func (chatroom *Chatroom) Create(creator string, name string, announcement string, broadcasturl string, ext string, queuelevel int) (*ChatroomResult, error) {
 	res, err := ResponseResult(chatroom.APPKEY, chatroom.APPSECRET, ACTION_CHATROOM_CREATE, url.Values{"creator": {creator}, "name": {name}, "announcement": {announcement}, "broadcasturl": {broadcasturl}, "ext": {ext}, "queuelevel": {strconv.Itoa(queuelevel)}})
@@ -175,5 +194,20 @@ func (chatroom *Chatroom) RequestAddr(roomid int64, accid string, clienttype int
 		return nil, err
 	}
 	return addrResult, nil
+
+}
+
+// SendMsg ...
+func (chatroom *Chatroom) SendMsg(roomid int64, msgId string, fromAccid string, msgType int, resendFlag int, attach string, ext string, antispam string, antispamCustom string, skipHistory int, bid string, highPriority bool, useYidun int, needHighPriorityMsgResend bool) (*ChatroomSendMsgResult, error) {
+	res, err := ResponseResult(chatroom.APPKEY, chatroom.APPSECRET, ACTION_CHATROOM_SEND_MSG, url.Values{"roomid": {strconv.FormatInt(roomid, 10)}, "msgId": {msgId}, "fromAccid": {fromAccid}, "msgType": {strconv.Itoa(msgType)}, "attach": {attach}, "ext": {ext}, "antispam": {antispam}, "antispamCustom": {antispamCustom}, "skipHistory": {strconv.Itoa(skipHistory)}, "bid": {bid}, "highPriority": {strconv.FormatBool(highPriority)}, "useYidun": {strconv.Itoa(useYidun)}, "needHighPriorityMsgResend": {strconv.FormatBool(needHighPriorityMsgResend)}})
+	if err != nil {
+		return nil, err
+	}
+	sendResult := &ChatroomSendMsgResult{}
+	err = json.Unmarshal(res, sendResult)
+	if err != nil {
+		return nil, err
+	}
+	return sendResult, nil
 
 }
