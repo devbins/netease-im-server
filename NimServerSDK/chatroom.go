@@ -237,3 +237,18 @@ func (chatroom *Chatroom) AddRobot(roomid int64, accids string, roleExt string, 
 	return robotReuslt, nil
 
 }
+
+// RemoveRobot ...
+func (chatroom *Chatroom) RemoveRobot(roomid int64, accids string) (*RobotResult, error) {
+	res, err := ResponseResult(chatroom.APPKEY, chatroom.APPSECRET, ACTION_CHATROOM_REMOVE_ROBOT, url.Values{"roomid": {strconv.FormatInt(roomid, 10)}, "accids": {accids}})
+	if err != nil {
+		return nil, err
+	}
+	robotResult := &RobotResult{}
+	err = json.Unmarshal(res, robotResult)
+	if err != nil {
+		return nil, err
+	}
+	return robotResult, nil
+
+}
