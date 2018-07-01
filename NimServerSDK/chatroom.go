@@ -51,6 +51,11 @@ type BatchChatroomResult struct {
 	SuccRooms    []ChatroomDetailInfo `json:"succRooms"`
 }
 
+type ToggleCloseStatResutl struct {
+	BaseResp
+	ChatroomInfo ChatroomInfo `json:"desc"`
+}
+
 // Create ...
 func (chatroom *Chatroom) Create(creator string, name string, announcement string, broadcasturl string, ext string, queuelevel int) (*ChatroomResult, error) {
 	res, err := ResponseResult(chatroom.APPKEY, chatroom.APPSECRET, ACTION_CHATROOM_CREATE, url.Values{"creator": {creator}, "name": {name}, "announcement": {announcement}, "broadcasturl": {broadcasturl}, "ext": {ext}, "queuelevel": {strconv.Itoa(queuelevel)}})
@@ -108,5 +113,20 @@ func (chatroom *Chatroom) Update(roomid int64, name string, announcement string,
 		return nil, err
 	}
 	return chatroomResult, nil
+
+}
+
+// name ...
+func (chatroom *Chatroom) ToggleCloseStat(roomid int64, operator string, valid bool) (*ToggleCloseStatResutl, error) {
+	res, err := ResponseResult(chatroom.APPKEY, chatroom.APPSECRET, ACTION_CHATROOM_TOGGLE_CLOSE_STAT, url.Values{"roomid": {strconv.FormatInt(roomid, 10)}, "operator": {operator}, "valid": {strconv.FormatBool(valid)}})
+	if err != nil {
+		return nil, err
+	}
+	toggleCloseStat := &ToggleCloseStatResutl{}
+	err = json.Unmarshal(res, toggleCloseStat)
+	if err != nil {
+		return nil, err
+	}
+	return toggleCloseStat, nil
 
 }
