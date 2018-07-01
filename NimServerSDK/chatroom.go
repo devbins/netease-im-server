@@ -95,3 +95,18 @@ func (chatroom *Chatroom) GetBatch(roomids string, needOnlineUserCount bool) (*B
 	return batchChatroomResult, nil
 
 }
+
+// Update ...
+func (chatroom *Chatroom) Update(roomid int64, name string, announcement string, broadcasturl string, ext string, needNotify bool, notifyExt string, queuelevel int) (*ChatroomResult, error) {
+	res, err := ResponseResult(chatroom.APPKEY, chatroom.APPSECRET, ACTION_CHATROOM_UPDATE, url.Values{"roomid": {strconv.FormatInt(roomid, 10)}, "name": {name}, "announcement": {announcement}, "broadcasturl": {broadcasturl}, "ext": {ext}, "needNotify": {strconv.FormatBool(needNotify)}, "notifyExt": {notifyExt}, "queuelevel": {strconv.Itoa(queuelevel)}})
+	if err != nil {
+		return nil, err
+	}
+	chatroomResult := &ChatroomResult{}
+	err = json.Unmarshal(res, chatroomResult)
+	if err != nil {
+		return nil, err
+	}
+	return chatroomResult, nil
+
+}
