@@ -68,6 +68,11 @@ type SetMemberResult struct {
 	BaseResp
 }
 
+type AddrResult struct {
+	Addr []string `json:"addr"`
+	BaseResp
+}
+
 // Create ...
 func (chatroom *Chatroom) Create(creator string, name string, announcement string, broadcasturl string, ext string, queuelevel int) (*ChatroomResult, error) {
 	res, err := ResponseResult(chatroom.APPKEY, chatroom.APPSECRET, ACTION_CHATROOM_CREATE, url.Values{"creator": {creator}, "name": {name}, "announcement": {announcement}, "broadcasturl": {broadcasturl}, "ext": {ext}, "queuelevel": {strconv.Itoa(queuelevel)}})
@@ -155,5 +160,20 @@ func (chatroom *Chatroom) SetMemberRole(roomid int64, operator string, target st
 		return nil, err
 	}
 	return setMemberResult, nil
+
+}
+
+// name ...
+func (chatroom *Chatroom) RequestAddr(roomid int64, accid string, clienttype int) (*AddrResult, error) {
+	res, err := ResponseResult(chatroom.APPKEY, chatroom.APPSECRET, ACTION_CHATROOM_REQUEST_ADDR, url.Values{"roomid": {strconv.FormatInt(roomid, 10)}, "accid": {accid}, "clienttype": {strconv.Itoa(clienttype)}})
+	if err != nil {
+		return nil, err
+	}
+	addrResult := &AddrResult{}
+	err = json.Unmarshal(res, addrResult)
+	if err != nil {
+		return nil, err
+	}
+	return addrResult, nil
 
 }
