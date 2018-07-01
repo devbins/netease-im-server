@@ -56,6 +56,18 @@ type ToggleCloseStatResutl struct {
 	ChatroomInfo ChatroomInfo `json:"desc"`
 }
 
+type SetMember struct {
+	Roomid int64  `json:"roomid"`
+	Level  int    `json:"level"`
+	Accid  string `json:"accid"`
+	Type   string `json:"type"`
+}
+
+type SetMemberResult struct {
+	SetMember SetMember `json:"desc"`
+	BaseResp
+}
+
 // Create ...
 func (chatroom *Chatroom) Create(creator string, name string, announcement string, broadcasturl string, ext string, queuelevel int) (*ChatroomResult, error) {
 	res, err := ResponseResult(chatroom.APPKEY, chatroom.APPSECRET, ACTION_CHATROOM_CREATE, url.Values{"creator": {creator}, "name": {name}, "announcement": {announcement}, "broadcasturl": {broadcasturl}, "ext": {ext}, "queuelevel": {strconv.Itoa(queuelevel)}})
@@ -128,5 +140,20 @@ func (chatroom *Chatroom) ToggleCloseStat(roomid int64, operator string, valid b
 		return nil, err
 	}
 	return toggleCloseStat, nil
+
+}
+
+// SetMemberRole ...
+func (chatroom *Chatroom) SetMemberRole(roomid int64, operator string, target string, opt int, optvalue bool, notifyExt string) (*SetMemberResult, error) {
+	res, err := ResponseResult(chatroom.APPKEY, chatroom.APPSECRET, ACTION_CHATROOM_SET_MEMBER_ROLE, url.Values{"roomid": {strconv.FormatInt(roomid, 10)}, "operator": {operator}, "target": {target}, "opt": {strconv.Itoa(opt)}, "optvalue": {strconv.FormatBool(optvalue)}, "notifyExt": {notifyExt}})
+	if err != nil {
+		return nil, err
+	}
+	setMemberResult := &SetMemberResult{}
+	err = json.Unmarshal(res, setMemberResult)
+	if err != nil {
+		return nil, err
+	}
+	return setMemberResult, nil
 
 }
