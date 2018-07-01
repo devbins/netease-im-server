@@ -57,7 +57,7 @@ const (
 
 	ACTION_CHATROOM_CREATE              = BASE_URL + "chatroom/create.action"           // 创建聊天室
 	ACTION_CHATROOM_GET                 = BASE_URL + "chatroom/get.action"              // 查询聊天室信息
-	ACTION_CAHTROOM_GET_BATCH           = BASE_URL + "chatroom/getBatch.action"         // 批量查询聊天室信息
+	ACTION_CHATROOM_GET_BATCH           = BASE_URL + "chatroom/getBatch.action"         // 批量查询聊天室信息
 	ACTION_CHATROOM_UPDATE              = BASE_URL + "chatroom/update.action"           // 更新聊天室信息
 	ACTION_CHATROOM_TOGGLE_CLOSE_STAT   = BASE_URL + "chatroom/toggleCloseStat.action"  // 修改聊天室开/关闭状态
 	ACTION_CHATROOM_SET_MEMBER_ROLE     = BASE_URL + "chatroom/setMemberRole.action"    // 设置聊天室内用户角色

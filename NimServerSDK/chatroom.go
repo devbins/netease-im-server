@@ -44,6 +44,13 @@ type ChatroomDetailInfo struct {
 	Queuelevel      int    `json:"queuelevel"`
 }
 
+type BatchChatroomResult struct {
+	BaseResp
+	NoExistRooms []int64              `json:"noExistRooms"`
+	FailRooms    []int64              `json:"failRooms"`
+	SuccRooms    []ChatroomDetailInfo `json:"succRooms"`
+}
+
 // Create ...
 func (chatroom *Chatroom) Create(creator string, name string, announcement string, broadcasturl string, ext string, queuelevel int) (*ChatroomResult, error) {
 	res, err := ResponseResult(chatroom.APPKEY, chatroom.APPSECRET, ACTION_CHATROOM_CREATE, url.Values{"creator": {creator}, "name": {name}, "announcement": {announcement}, "broadcasturl": {broadcasturl}, "ext": {ext}, "queuelevel": {strconv.Itoa(queuelevel)}})
@@ -71,5 +78,20 @@ func (chatroom *Chatroom) Get(romid int64, needOnlineUserCount bool) (*ChatroomD
 		return nil, err
 	}
 	return chatroomDetailInfoResult, nil
+
+}
+
+// GetBatch ...
+func (chatroom *Chatroom) GetBatch(roomids string, needOnlineUserCount bool) (*BatchChatroomResult, error) {
+	res, err := ResponseResult(chatroom.APPKEY, chatroom.APPSECRET, ACTION_CHATROOM_GET_BATCH, url.Values{"roomids": {roomids}, "needOnlineUserCount": {strconv.FormatBool(needOnlineUserCount)}})
+	if err != nil {
+		return nil, err
+	}
+	batchChatroomResult := &BatchChatroomResult{}
+	err = json.Unmarshal(res, batchChatroomResult)
+	if err != nil {
+		return nil, err
+	}
+	return batchChatroomResult, nil
 
 }
