@@ -92,6 +92,17 @@ type SendMsgResult struct {
 	HighPriorityFlag int    `json:"highPriorityFlag"`
 }
 
+type RobotDesc struct {
+	FailAccids    string `json:"failAccids"`
+	SuccessAccids string `json:"successAccids"`
+	OldAccids     string `json:"oldAccids"`
+}
+
+type RobotResult struct {
+	BaseResp
+	RobotDesc `json:"desc"`
+}
+
 // Create ...
 func (chatroom *Chatroom) Create(creator string, name string, announcement string, broadcasturl string, ext string, queuelevel int) (*ChatroomResult, error) {
 	res, err := ResponseResult(chatroom.APPKEY, chatroom.APPSECRET, ACTION_CHATROOM_CREATE, url.Values{"creator": {creator}, "name": {name}, "announcement": {announcement}, "broadcasturl": {broadcasturl}, "ext": {ext}, "queuelevel": {strconv.Itoa(queuelevel)}})
@@ -209,5 +220,20 @@ func (chatroom *Chatroom) SendMsg(roomid int64, msgId string, fromAccid string, 
 		return nil, err
 	}
 	return sendResult, nil
+
+}
+
+// AddRobot ...
+func (chatroom *Chatroom) AddRobot(roomid int64, accids string, roleExt string, notifyExt string) (*RobotResult, error) {
+	res, err := ResponseResult(chatroom.APPKEY, chatroom.APPSECRET, ACTION_CHATROOM_ADD_ROBOT, url.Values{"roomid": {strconv.FormatInt(roomid, 10)}, "accids": {accids}, "roleExt": {roleExt}, "notifyExt": {notifyExt}})
+	if err != nil {
+		return nil, err
+	}
+	robotReuslt := &RobotResult{}
+	err = json.Unmarshal(res, robotReuslt)
+	if err != nil {
+		return nil, err
+	}
+	return robotReuslt, nil
 
 }
