@@ -274,5 +274,18 @@ func (chatroom *Chatroom) TemptoraryMute(roomid int64, operator string, target s
 		return nil, err
 	}
 	return teamporaryMuteResult, nil
+}
 
+// QueueOffer ...
+func (chatroom *Chatroom) QueueOffer(roomid int64, key, value, operator, transient string) (*BaseResp, error) {
+	res, err := ResponseResult(chatroom.APPKEY, chatroom.APPSECRET, ACTION_CHATROOM_QUEUE_OFFER, url.Values{"roomid": {strconv.FormatInt(roomid, 10)}, "key": {key}, "value": {value}, "operator": {operator}, "transient": {transient}})
+	if err != nil {
+		return nil, err
+	}
+	baseResp := &BaseResp{}
+	err = json.Unmarshal(res, baseResp)
+	if err != nil {
+		return nil, err
+	}
+	return baseResp, nil
 }
