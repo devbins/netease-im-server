@@ -103,6 +103,15 @@ type RobotResult struct {
 	RobotDesc `json:"desc"`
 }
 
+type TemporaryMuteDesc struct {
+	MuteDuration int64 `json:"muteDuration"`
+}
+
+type TemporaryMuteResult struct {
+	BaseResp
+	TemporaryMuteDesc TemporaryMuteDesc `json:"desc"`
+}
+
 // Create ...
 func (chatroom *Chatroom) Create(creator string, name string, announcement string, broadcasturl string, ext string, queuelevel int) (*ChatroomResult, error) {
 	res, err := ResponseResult(chatroom.APPKEY, chatroom.APPSECRET, ACTION_CHATROOM_CREATE, url.Values{"creator": {creator}, "name": {name}, "announcement": {announcement}, "broadcasturl": {broadcasturl}, "ext": {ext}, "queuelevel": {strconv.Itoa(queuelevel)}})
@@ -250,5 +259,20 @@ func (chatroom *Chatroom) RemoveRobot(roomid int64, accids string) (*RobotResult
 		return nil, err
 	}
 	return robotResult, nil
+
+}
+
+// TemptoraryMute ...
+func (chatroom *Chatroom) TemptoraryMute(roomid int64, operator string, target string, muteDuration int64, needNotify bool, notifyExt string) (*TemporaryMuteResult, error) {
+	res, err := ResponseResult(chatroom.APPKEY, chatroom.APPSECRET, ACTION_CHATROOM_TEMPORARY_MUTE, url.Values{"roomid": {strconv.FormatInt(roomid, 10)}, "operator": {operator}, "target": {target}, "muteDuration": {strconv.FormatInt(muteDuration, 10)}, "needNotify": {strconv.FormatBool(needNotify)}, "notifyExt": {notifyExt}})
+	if err != nil {
+		return nil, err
+	}
+	teamporaryMuteResult := &TemporaryMuteResult{}
+	err = json.Unmarshal(res, teamporaryMuteResult)
+	if err != nil {
+		return nil, err
+	}
+	return teamporaryMuteResult, nil
 
 }
