@@ -338,3 +338,18 @@ func (chatroom *Chatroom) QueueList(roomid int64) (*QueueList, error) {
 	return queueList, nil
 
 }
+
+// QueueDrop ...
+func (chatroom *Chatroom) QueueDrop(roomid int64) (*BaseResp, error) {
+	res, err := ResponseResult(chatroom.APPKEY, chatroom.APPSECRET, ACTION_CHATROOM_QUEUE_DROP, url.Values{"roomid": {strconv.FormatInt(roomid, 10)}})
+	if err != nil {
+		return nil, err
+	}
+	baseResp := &BaseResp{}
+	err = json.Unmarshal(res, baseResp)
+	if err != nil {
+		return nil, err
+	}
+	return baseResp, nil
+
+}
