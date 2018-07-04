@@ -112,6 +112,16 @@ type TemporaryMuteResult struct {
 	TemporaryMuteDesc TemporaryMuteDesc `json:"desc"`
 }
 
+type QueuePoll struct {
+	Code int       `json:"code"`
+	Desc QueueDesc `json:"desc"`
+}
+
+type QueueDesc struct {
+	Value string `json:"value"`
+	Key   string `json:"key"`
+}
+
 // Create ...
 func (chatroom *Chatroom) Create(creator string, name string, announcement string, broadcasturl string, ext string, queuelevel int) (*ChatroomResult, error) {
 	res, err := ResponseResult(chatroom.APPKEY, chatroom.APPSECRET, ACTION_CHATROOM_CREATE, url.Values{"creator": {creator}, "name": {name}, "announcement": {announcement}, "broadcasturl": {broadcasturl}, "ext": {ext}, "queuelevel": {strconv.Itoa(queuelevel)}})
@@ -288,4 +298,19 @@ func (chatroom *Chatroom) QueueOffer(roomid int64, key, value, operator, transie
 		return nil, err
 	}
 	return baseResp, nil
+}
+
+// QueuePoll ...
+func (chatroom *Chatroom) QueuePoll(roomid int64, key string) (*QueuePoll, error) {
+	res, err := ResponseResult(chatroom.APPKEY, chatroom.APPSECRET, ACTION_CHATROOM_QUEUE_POLL, url.Values{"roomid": {strconv.FormatInt(roomid, 10)}, "key": {key}})
+	if err != nil {
+		return nil, err
+	}
+	queuePoll := &QueuePoll{}
+	err = json.Unmarshal(res, queuePoll)
+	if err != nil {
+		return nil, err
+	}
+	return queuePoll, nil
+
 }
