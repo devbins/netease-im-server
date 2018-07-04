@@ -122,6 +122,15 @@ type QueueDesc struct {
 	Key   string `json:"key"`
 }
 
+type QueueList struct {
+	Code int           `json:"code"`
+	Desc QueueListDesc `json:"desc"`
+}
+
+type QueueListDesc struct {
+	List []map[string]string `json:"list"`
+}
+
 // Create ...
 func (chatroom *Chatroom) Create(creator string, name string, announcement string, broadcasturl string, ext string, queuelevel int) (*ChatroomResult, error) {
 	res, err := ResponseResult(chatroom.APPKEY, chatroom.APPSECRET, ACTION_CHATROOM_CREATE, url.Values{"creator": {creator}, "name": {name}, "announcement": {announcement}, "broadcasturl": {broadcasturl}, "ext": {ext}, "queuelevel": {strconv.Itoa(queuelevel)}})
@@ -312,5 +321,20 @@ func (chatroom *Chatroom) QueuePoll(roomid int64, key string) (*QueuePoll, error
 		return nil, err
 	}
 	return queuePoll, nil
+
+}
+
+// QueueList ...
+func (chatroom *Chatroom) QueueList(roomid int64) (*QueueList, error) {
+	res, err := ResponseResult(chatroom.APPKEY, chatroom.APPSECRET, ACTION_CHATROOM_QUEUE_LIST, url.Values{"roomid": {strconv.FormatInt(roomid, 10)}})
+	if err != nil {
+		return nil, err
+	}
+	queueList := &QueueList{}
+	err = json.Unmarshal(res, queueList)
+	if err != nil {
+		return nil, err
+	}
+	return queueList, nil
 
 }
